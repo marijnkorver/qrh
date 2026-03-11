@@ -12,6 +12,8 @@ import {
 import { useState } from 'react'
 import 'liquidcn/styles.css'
 
+const BOOKING_URL = 'https://calendar.app.google/kH6P8dqxAzCNzVYg8'
+
 const navItems = [
   { name: 'Home', link: '#hero' },
   { name: 'Therapy', link: '#therapy' },
@@ -35,19 +37,15 @@ function AnchorLink({ href, children, className, onClick, ...props }: React.Anch
   return <a href={href} onClick={handleClick} className={className} {...props}>{children}</a>
 }
 
+const openModal = (url: string) => {
+  window.dispatchEvent(new CustomEvent('qrhht-open-modal', { detail: { url } }))
+}
+
 export default function QrhhtNavbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [modalOpen, setModalOpen] = useState(false)
-
-  const openModal = () => {
-    const modal = document.getElementById('calendarModal')
-    if (modal) { modal.style.display = 'block'; document.body.style.overflow = 'hidden' }
-    setModalOpen(true)
-  }
 
   return (
-    // Override top-4 → top-0 via className
-    <Navbar menuOpen={isMobileMenuOpen} className="!top-0">
+    <Navbar menuOpen={isMobileMenuOpen} className="!top-0 !fixed qrhht-navbar-wrap" style={{ top: 0, position: 'fixed' } as React.CSSProperties}>
       {/* Desktop */}
       <NavBody>
         <a href="#hero" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
@@ -58,11 +56,11 @@ export default function QrhhtNavbar() {
           LinkComponent={AnchorLink as any}
         />
         <NavbarButton
-          onClick={openModal}
+          onClick={() => openModal(BOOKING_URL)}
           as="button"
           className="!bg-[#d4af37] !text-white !border !border-[#d4af37] hover:!bg-[#f4c842] hover:!border-[#f4c842] !rounded-full !px-6 !font-semibold"
         >
-          Apply Now
+          Book A Session
         </NavbarButton>
       </NavBody>
 
@@ -91,7 +89,7 @@ export default function QrhhtNavbar() {
           <button
             onClick={() => {
               setIsMobileMenuOpen(false)
-              openModal()
+              openModal(BOOKING_URL)
             }}
             style={{
               background: '#d4af37', color: 'white', padding: '10px 25px',
@@ -99,7 +97,7 @@ export default function QrhhtNavbar() {
               fontSize: '1rem', marginTop: '8px'
             }}
           >
-            Apply Now
+            Book A Session
           </button>
         </MobileNavMenu>
       </MobileNav>

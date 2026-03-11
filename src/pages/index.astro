@@ -4,6 +4,8 @@ import QrhhtFooter from '../components/QrhhtFooter.tsx';
 import QrhhtHero from '../components/QrhhtHero.tsx';
 import QrhhtOfferingCards from '../components/QrhhtOfferingCards.tsx';
 import QrhhtCTAButtons from '../components/QrhhtCTAButtons.tsx';
+import QrhhtTestimonials from '../components/QrhhtTestimonials.tsx';
+import QrhhtModal from '../components/QrhhtModal.tsx';
 import '../styles/global.css';
 
 const pageTitle = "QRHHT - Dive deep. Rise higher. Live more.";
@@ -43,27 +45,64 @@ const pageURL = "https://qrhht-landing.vercel.app/";
       align-items: center;
       justify-content: center;
       text-align: center;
+      background: #ffffff;
     }
+    /* Outer: white bg shows through padding gap */
     .hero-bg-image {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      background: #ffffff;
+    }
+    /* Inner image with rounded corners */
+    .hero-bg-image::after {
+      content: '';
+      position: absolute;
+      top: 80px; left: 80px;
+      right: 80px; bottom: 80px;
       background-image: url('/images/hero-bg.jpg');
       background-size: cover;
       background-position: center;
-      z-index: 0;
+      border-radius: 20px;
     }
-    .hero-overlay {
+    /* Subtle overlay on the inner image only (same inset) */
+    .hero-bg-image::before {
+      content: '';
       position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.35);
+      top: 80px; left: 80px;
+      right: 80px; bottom: 80px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 20px;
       z-index: 1;
     }
+    /* Gold shimmer accent at top */
+    .hero-gold-accent {
+      position: absolute;
+      top: 0; left: 0; width: 100%;
+      height: 3px;
+      background: linear-gradient(
+        to right,
+        transparent 0%,
+        rgba(212, 175, 55, 0.6) 30%,
+        rgba(212, 175, 55, 1) 50%,
+        rgba(212, 175, 55, 0.6) 70%,
+        transparent 100%
+      );
+      z-index: 60;
+      pointer-events: none;
+    }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0) translateZ(0); }
+      50% { transform: translateY(-8px) translateZ(15px); }
+    }
     .hero-content {
       position: relative;
-      z-index: 2;
+      z-index: 3;
       max-width: 800px;
-      padding: 0 20px;
+      padding: 80px 20px 0;
+      transform-style: preserve-3d;
+      animation: heroFloat 7s ease-in-out infinite;
     }
     .hero h1 {
       font-family: 'Playfair Display', serif;
@@ -72,18 +111,18 @@ const pageURL = "https://qrhht-landing.vercel.app/";
       color: #ffffff;
       margin-bottom: 1.5rem;
       letter-spacing: 1px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     .hero .subtext {
       font-size: 1.4rem;
-      color: #e8e8e8;
+      color: #f0f0f0;
       margin-bottom: 3rem;
       line-height: 1.7;
-      text-shadow: 0 1px 5px rgba(0,0,0,0.3);
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
     }
     .hero-buttons {
       display: flex;
-      gap: 20px;
+      gap: 32px;
       justify-content: center;
       flex-wrap: wrap;
     }
@@ -108,13 +147,10 @@ const pageURL = "https://qrhht-landing.vercel.app/";
 
     /* ── Video Section ── */
     .video-section {
-      position: relative;
-      height: 100vh;
-      width: 100%;
-      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
+      background: #0a1a2e;
     }
     #video-wrapper {
       position: absolute;
@@ -122,6 +158,10 @@ const pageURL = "https://qrhht-landing.vercel.app/";
       z-index: 0;
       overflow: hidden;
       pointer-events: none;
+      /* Padding creates breathing room around the video (matches hero) */
+      padding: 80px;
+      box-sizing: border-box;
+      background: #0a1a2e;
     }
     #video-container {
       position: absolute;
@@ -176,8 +216,7 @@ const pageURL = "https://qrhht-landing.vercel.app/";
     .about-content { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
     .about h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: #0f4c75; margin-bottom: 2rem; font-weight: 400; }
     .about p { font-size: 1.3rem; color: #2c3e50; line-height: 1.8; margin-bottom: 1.5rem; }
-    .about-image { width: 100%; height: 450px; background-image: url('/images/about-image.jpg'); background-size: cover; background-position: center; border-radius: 20px; opacity: 0; transform: translateX(50px); transition: all 0.8s ease; box-shadow: 0 25px 50px rgba(0,0,0,0.1); }
-    .about-image.animate { opacity: 1; transform: translateX(0); }
+    .about-image { width: 100%; height: 450px; background-image: url('/images/about-image.jpg'); background-size: cover; background-position: center; border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.1); }
 
     /* ── Offerings ── */
     .offerings { padding: 120px 0; background: #f8f6f2; }
@@ -211,22 +250,8 @@ const pageURL = "https://qrhht-landing.vercel.app/";
 
     /* ── Testimonials ── */
     .testimonial-carousel { background: #f8f6f2; padding: 80px 0; }
-    .testimonial-container { max-width: 1000px; margin: 0 auto; text-align: center; position: relative; padding: 0 80px; }
+    .testimonial-container { max-width: 1000px; margin: 0 auto; text-align: center; padding: 0 60px; }
     .testimonial-carousel h3 { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #0f4c75; margin-bottom: 3rem; font-weight: 400; }
-    .testimonial-slider { position: relative; overflow: hidden; width: 100%; }
-    .testimonial-track { display: flex; transition: transform 0.5s ease; width: 400%; }
-    .testimonial-slide { min-width: 25%; flex-shrink: 0; display: flex; align-items: center; gap: 40px; padding: 0 20px; box-sizing: border-box; }
-    .testimonial-image { width: 200px; height: 200px; border-radius: 15px; background-size: cover; background-position: center; flex-shrink: 0; box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
-    .testimonial-content { flex: 1; text-align: left; }
-    .testimonial-text { font-size: 1.3rem; color: #2c3e50; line-height: 1.7; margin-bottom: 1.5rem; font-style: italic; }
-    .testimonial-author { font-size: 1.1rem; color: #0f4c75; font-weight: 600; }
-    .testimonial-nav { display: flex; justify-content: center; gap: 10px; margin-top: 2rem; }
-    .testimonial-dot { width: 12px; height: 12px; border-radius: 50%; background: #d4d4d4; cursor: pointer; transition: background 0.3s ease; }
-    .testimonial-dot.active { background: #d4af37; }
-    .carousel-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(15,76,117,0.8); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; z-index: 10; }
-    .carousel-nav:hover { background: rgba(15,76,117,1); transform: translateY(-50%) scale(1.1); }
-    .carousel-prev { left: 20px; }
-    .carousel-next { right: 20px; }
 
     /* ── Closing CTA ── */
     .closing-cta { padding: 120px 0; background: #0f4c75; color: white; text-align: center; }
@@ -241,8 +266,18 @@ const pageURL = "https://qrhht-landing.vercel.app/";
     .modal-close:hover { color: #0f4c75; }
 
     /* ── Animations ── */
-    .fade-in { opacity: 0; transform: translateY(40px); transition: all 0.8s ease; }
+    .fade-in { transition: all 0.8s ease; }
     .fade-in.animate { opacity: 1; transform: translateY(0); }
+
+    /* ── Hero entrance (anime.js handles h1 + subtext opacity on load) ── */
+    .hero-content h1,
+    .hero-content .subtext {
+      opacity: 0;
+    }
+    /* Hero content needs top padding to sit below fixed navbar */
+    .hero-content {
+      padding-top: 100px !important;
+    }
 
     /* ── Responsive ── */
     @media (max-width: 768px) {
@@ -254,18 +289,11 @@ const pageURL = "https://qrhht-landing.vercel.app/";
       .offerings-grid { grid-template-columns: 1fr; }
       .training-cards { grid-template-columns: 1fr; }
       .closing-buttons { flex-direction: column; align-items: center; }
-      .testimonial-container { padding: 0 60px; }
-      .testimonial-slide { flex-direction: column; text-align: center; padding: 0 10px; }
-      .testimonial-image { width: 180px; height: 180px; margin: 0 auto 20px; }
-      .testimonial-content { text-align: center; }
-      .carousel-prev { left: 5px; }
-      .carousel-next { right: 5px; }
+      .testimonial-container { padding: 0 20px; }
       .video-content h2 { font-size: 2.2rem; }
     }
     @media (max-width: 480px) {
-      .testimonial-container { padding: 0 40px; }
       .testimonial-carousel h3 { font-size: 1.8rem; }
-      .testimonial-image { width: 150px; height: 150px; }
     }
   </style>
 </head>
@@ -274,10 +302,12 @@ const pageURL = "https://qrhht-landing.vercel.app/";
   <!-- LiquidCN Navbar (React) -->
   <QrhhtNavbar client:load />
 
+  <!-- Gold accent line at very top (above navbar) -->
+  <div class="hero-gold-accent"></div>
+
   <!-- Hero: image background -->
-  <section class="hero" id="hero">
+  <section class="hero stack-section" id="hero" style="z-index: 10;">
     <div class="hero-bg-image"></div>
-    <div class="hero-overlay"></div>
     <div class="hero-content">
       <h1>Dive deep. Rise higher. Live more.</h1>
       <p class="subtext">Healing and training that awaken what&#39;s extraordinary within you.</p>
@@ -286,7 +316,7 @@ const pageURL = "https://qrhht-landing.vercel.app/";
   </section>
 
   <!-- New Video Section (YouTube background) -->
-  <section class="video-section" id="video-section">
+  <section class="video-section stack-section" id="video-section" style="z-index: 20;">
     <div id="video-wrapper">
       <div id="video-container"></div>
     </div>
@@ -294,7 +324,7 @@ const pageURL = "https://qrhht-landing.vercel.app/";
   </section>
 
   <!-- About -->
-  <section class="about" id="about">
+  <section class="about stack-section" id="about" style="z-index: 30;">
     <div class="container">
       <div class="about-content">
         <div class="fade-in">
@@ -308,7 +338,7 @@ const pageURL = "https://qrhht-landing.vercel.app/";
   </section>
 
   <!-- Offerings -->
-  <section class="offerings" id="offerings">
+  <section class="offerings stack-section" id="offerings" style="z-index: 40;">
     <div class="container">
       <h2 class="fade-in">Your Pathways</h2>
       <p class="offerings-subtext fade-in">Whether you&#39;re here for your own healing or to help others heal, QRHHT offers an experience that transforms.</p>
@@ -317,7 +347,7 @@ const pageURL = "https://qrhht-landing.vercel.app/";
   </section>
 
   <!-- Training Journey -->
-  <section class="training-journey">
+  <section class="training-journey stack-section" style="z-index: 50;">
     <div class="container">
       <h2 class="fade-in">The Training Journey</h2>
       <div class="training-hero-image fade-in"></div>
@@ -345,13 +375,13 @@ const pageURL = "https://qrhht-landing.vercel.app/";
         </div>
       </div>
       <div style="text-align:center">
-        <QrhhtCTAButtons client:load showBooking={false} trainingLabel="Apply Now" />
+        <QrhhtCTAButtons client:load showBooking={false} trainingLabel="Train With Me" />
       </div>
     </div>
   </section>
 
   <!-- Therapy Section -->
-  <section class="therapy-section">
+  <section class="therapy-section stack-section" style="z-index: 60;">
     <div class="container">
       <div class="therapy-content">
         <div class="fade-in">
@@ -359,7 +389,7 @@ const pageURL = "https://qrhht-landing.vercel.app/";
           <p>Individual sessions that take you to the root of your psyche and beyond. These are not about temporary relief &#8212; they&#39;re about transformation.</p>
           <p>Experience a unique approach to healing that awakens what&#39;s already extraordinary within you.</p>
           <div style="margin-top:1rem">
-            <QrhhtCTAButtons client:load showTraining={false} bookingLabel="Book Your Session" />
+            <QrhhtCTAButtons client:load showTraining={false} bookingLabel="Book A Session" />
           </div>
         </div>
         <div class="fade-in">
@@ -370,55 +400,16 @@ const pageURL = "https://qrhht-landing.vercel.app/";
     </div>
   </section>
 
-  <!-- Testimonials -->
-  <section class="testimonial-carousel">
+  <!-- Testimonials (Swiper) -->
+  <section class="testimonial-carousel stack-section" style="z-index: 70;">
     <div class="testimonial-container">
       <h3>What Our Community Says</h3>
-      <div class="testimonial-slider">
-        <button class="carousel-nav carousel-prev" aria-label="Previous">&#8249;</button>
-        <button class="carousel-nav carousel-next" aria-label="Next">&#8250;</button>
-        <div class="testimonial-track">
-          <div class="testimonial-slide">
-            <div class="testimonial-image" style="background-image:url('/images/testimonial-1.jpg')"></div>
-            <div class="testimonial-content">
-              <p class="testimonial-text">&#8220;This work changed not just how I see my challenges, but how I see myself. I discovered possibilities I never knew existed.&#8221;</p>
-              <p class="testimonial-author">&#8212; Sarah M.</p>
-            </div>
-          </div>
-          <div class="testimonial-slide">
-            <div class="testimonial-image" style="background-image:url('/images/testimonial-2.jpg')"></div>
-            <div class="testimonial-content">
-              <p class="testimonial-text">&#8220;The training program gave me not just skills, but a completely new way of being with others. I feel confident and aligned with my practice.&#8221;</p>
-              <p class="testimonial-author">&#8212; Marcus T.</p>
-            </div>
-          </div>
-          <div class="testimonial-slide">
-            <div class="testimonial-image" style="background-image:url('/images/testimonial-3.jpg')"></div>
-            <div class="testimonial-content">
-              <p class="testimonial-text">&#8220;I went from feeling stuck to feeling empowered. The depth of transformation I experienced was beyond anything I imagined possible.&#8221;</p>
-              <p class="testimonial-author">&#8212; Elena R.</p>
-            </div>
-          </div>
-          <div class="testimonial-slide">
-            <div class="testimonial-image" style="background-image:url('/images/testimonial-4.jpg')"></div>
-            <div class="testimonial-content">
-              <p class="testimonial-text">&#8220;The community and support I found here changed my life. This isn&#39;t just healing &#8212; it&#39;s awakening to who you really are.&#8221;</p>
-              <p class="testimonial-author">&#8212; David K.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial-nav">
-        <div class="testimonial-dot active"></div>
-        <div class="testimonial-dot"></div>
-        <div class="testimonial-dot"></div>
-        <div class="testimonial-dot"></div>
-      </div>
+      <QrhhtTestimonials client:load />
     </div>
   </section>
 
   <!-- Closing CTA -->
-  <section class="closing-cta" id="contact">
+  <section class="closing-cta stack-section" id="contact" style="z-index: 80;">
     <div class="container">
       <h2 class="fade-in">Start your journey today.</h2>
       <p class="fade-in">Whether you&#39;re here for yourself or for others, the path starts with one choice &#8212; to dive deeper and rise higher.</p>
@@ -428,31 +419,34 @@ const pageURL = "https://qrhht-landing.vercel.app/";
     </div>
   </section>
 
+  <!-- Anime.js scroll animations -->
+  <script>
+    import { initScrollAnimations } from '../lib/animations';
+    // ResizeObserver in initTallSectionScroll handles timing after React hydration.
+    // Just wait for DOM ready before calling.
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initScrollAnimations);
+    } else {
+      initScrollAnimations();
+    }
+  </script>
+
   <!-- LiquidCN Footer (React) -->
   <QrhhtFooter client:load />
 
+  <!-- Global Booking Modal (singleton, listens to qrhht-open-modal events) -->
+  <QrhhtModal client:load />
+
   <script>
-    // Intersection observer for fade-in animations
+    // Intersection observer for fade-in animations (legacy fallback)
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('animate'); });
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
     document.querySelectorAll('.fade-in, .about-image').forEach(el => obs.observe(el));
 
-    // Testimonial carousel
-    let cur = 0;
-    const slides = document.querySelectorAll('.testimonial-slide');
-    const dots = document.querySelectorAll('.testimonial-dot');
-    const track = document.querySelector('.testimonial-track') as HTMLElement;
-    function goTo(i: number) {
-      track.style.transform = 'translateX(-' + (i * 100) + '%)';
-      dots.forEach(d => d.classList.remove('active'));
-      dots[i].classList.add('active');
-      cur = i;
-    }
-    setInterval(() => goTo((cur + 1) % slides.length), 5000);
-    dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
-    document.querySelector('.carousel-prev')?.addEventListener('click', () => goTo((cur - 1 + slides.length) % slides.length));
-    document.querySelector('.carousel-next')?.addEventListener('click', () => goTo((cur + 1) % slides.length));
+    // Tall section scroll-through handled by animations.ts (initTallSectionScroll)
+
+
 
     // YouTube IFrame API for video section background
     (function() {

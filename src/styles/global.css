@@ -26,8 +26,46 @@ html, body {
   --border: oklch(85% 0.02 250);
 }
 
+/* ── Sticky scroll-stack: sections pin at top and stack on each other ── */
+.stack-section {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  /* overflow: hidden removed — allows tall sections to show full content */
+}
+
+/* ── Tall section wrapper: provides scroll distance for onScroll sync ── */
+/* JS wraps tall sections in this; the section becomes sticky inside it */
+.tall-section-wrapper {
+  position: relative;
+  /* No sticky — wrapper just provides height for the scroll range */
+}
+
 /* ── Fix LiquidCN Navbar top spacing ── */
-/* Navbar component defaults to top-4; force to top-0 */
+/* Navbar component defaults to sticky top-4; force fixed top-0 */
 .sticky.inset-x-0.top-4 {
   top: 0 !important;
+  position: fixed !important;
+}
+/* Motion div wrapper that LiquidCN animates — ensure no gap */
+nav.sticky,
+nav[class*="top-4"] {
+  top: 0 !important;
+  position: fixed !important;
+}
+
+/* ── Footer: ensure it renders above sticky sections ── */
+footer {
+  position: relative;
+  z-index: 999;
+}
+
+/* ── Hero content padding ── */
+.hero-content {
+  padding: 80px 20px !important;
+}
+
+/* ── Video wrapper: full-bleed, no rounding ── */
+#video-wrapper {
+  padding: 40px;
 }
