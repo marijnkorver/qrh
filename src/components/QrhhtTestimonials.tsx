@@ -116,10 +116,15 @@ export default function QrhhtTestimonials() {
           align-items: center;
           justify-content: center;
           padding: 36px 32px;
-          box-shadow: 0 24px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(212,175,55,0.15);
+          box-shadow: 0 24px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(212,175,55,0.15), 0 0 30px rgba(212,175,55,0.2), 0 0 60px rgba(15,76,117,0.3);
           text-align: center;
           transform-style: preserve-3d;
           backface-visibility: hidden;
+          animation: testimonialGlow 3s ease-in-out infinite;
+        }
+        @keyframes testimonialGlow {
+          0%, 100% { box-shadow: 0 24px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(212,175,55,0.15), 0 0 20px rgba(212,175,55,0.15), 0 0 40px rgba(15,76,117,0.2); }
+          50% { box-shadow: 0 24px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(212,175,55,0.3), 0 0 40px rgba(212,175,55,0.35), 0 0 80px rgba(15,76,117,0.4); }
         }
 
         /* Gold accent bar */

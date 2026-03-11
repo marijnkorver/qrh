@@ -9,21 +9,21 @@ const openModal = (url: string) => {
   window.dispatchEvent(new CustomEvent('qrhht-open-modal', { detail: { url } }))
 }
 
+const cardStyle: React.CSSProperties = {
+  padding: '40px',
+  width: '100%',
+  boxSizing: 'border-box',
+  minWidth: 0, /* prevent grid cell blowout */
+}
+
 export default function QrhhtOfferingCards() {
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: '40px',
-        width: '100%',
-      }}
-    >
+    <div className="offerings-grid" style={{ width: '100%', overflow: 'visible' }}>
       {/* Therapy Card */}
       <Card
         isGlass={false}
-        className="!rounded-2xl !border-2 !border-transparent hover:!border-[#d4af37] !transition-all !duration-300 hover:-translate-y-2 !shadow-lg hover:!shadow-xl !text-center fade-in"
-        style={{ padding: '40px' }}
+        className="aura-effect !rounded-2xl !border-2 !border-transparent hover:!border-[#d4af37] !transition-all !duration-300 hover:-translate-y-2 !shadow-lg hover:!shadow-xl !text-center fade-in"
+        style={cardStyle}
         id="therapy"
       >
         <CardHeader>
@@ -40,7 +40,7 @@ export default function QrhhtOfferingCards() {
           <Button
             variant="default"
             size="lg"
-            className="!bg-[#d4af37] !text-white !border-[#d4af37] hover:!bg-[#f4c842] hover:!border-[#f4c842] !rounded-full !font-semibold"
+            className="btn-aura !bg-[#d4af37] !text-white !border-[#d4af37] hover:!bg-[#f4c842] hover:!border-[#f4c842] !rounded-full !font-semibold"
             onClick={() => openModal(BOOKING_URL)}
           >
             Book A Session
@@ -51,8 +51,8 @@ export default function QrhhtOfferingCards() {
       {/* Training Card */}
       <Card
         isGlass={false}
-        className="!rounded-2xl !border-2 !border-transparent hover:!border-[#d4af37] !transition-all !duration-300 hover:-translate-y-2 !shadow-lg hover:!shadow-xl !text-center fade-in"
-        style={{ padding: '40px' }}
+        className="aura-effect !rounded-2xl !border-2 !border-transparent hover:!border-[#d4af37] !transition-all !duration-300 hover:-translate-y-2 !shadow-lg hover:!shadow-xl !text-center fade-in"
+        style={cardStyle}
         id="training"
       >
         <CardHeader>
@@ -69,7 +69,7 @@ export default function QrhhtOfferingCards() {
           <Button
             variant="outline"
             size="lg"
-            className="!bg-[#0f4c75] !text-white !border-[#0f4c75] hover:!bg-[#1a5d8a] hover:!border-[#1a5d8a] !rounded-full !font-semibold"
+            className="btn-aura !bg-[#0f4c75] !text-white !border-[#0f4c75] hover:!bg-[#1a5d8a] hover:!border-[#1a5d8a] !rounded-full !font-semibold"
             onClick={() => openModal(CALENDLY_URL)}
           >
             Train With Me

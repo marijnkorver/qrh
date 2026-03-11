@@ -41,7 +41,7 @@ export default function QrhhtCTAButtons({
         <Button
           variant="default"
           size="lg"
-          className="!bg-[#d4af37] !text-white !border-[#d4af37] hover:!bg-[#f4c842] hover:!border-[#f4c842] !rounded-full !font-semibold"
+          className="btn-aura !bg-[#d4af37] !text-white !border-[#d4af37] hover:!bg-[#f4c842] hover:!border-[#f4c842] !rounded-full !font-semibold"
           onClick={() => openModal(BOOKING_URL)}
         >
           {bookingLabel}
@@ -53,8 +53,8 @@ export default function QrhhtCTAButtons({
           size="lg"
           className={
             closingStyle
-              ? '!bg-transparent !text-[#d4af37] !border-[#d4af37] hover:!bg-[#d4af37]/20 !rounded-full !font-semibold'
-              : '!bg-[#0f4c75] !text-white !border-[#0f4c75] hover:!bg-[#1a5d8a] hover:!border-[#1a5d8a] !rounded-full !font-semibold'
+              ? 'btn-aura !bg-transparent !text-[#d4af37] !border-[#d4af37] hover:!bg-[#d4af37]/20 !rounded-full !font-semibold'
+              : 'btn-aura !bg-[#0f4c75] !text-white !border-[#0f4c75] hover:!bg-[#1a5d8a] hover:!border-[#1a5d8a] !rounded-full !font-semibold'
           }
           onClick={() => openModal(CALENDLY_URL)}
         >

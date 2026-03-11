@@ -3,111 +3,77 @@ import { MOTION } from './motion'
 
 /**
  * QRHHT hero entrance animations (anime.js v4)
- * Scroll stacking is handled by CSS sticky positioning.
- * Tall sections (> 100vh content) get a wrapper + onScroll sync to pin & scroll through.
+ * Plasma: CSS-only pulse animation.
+ * Scroll stacking: anime.js onScroll sync on .stack-section-inner divs.
  */
-
-export function initScrollAnimations(): void {
-  // ── Hero content: entrance on load ──
-  animate('#hero .hero-content h1', {
-    opacity: [0, 1],
-    translateY: [MOTION.slideY.item, 0],
-    duration: MOTION.duration,
-    ease: MOTION.ease,
-    delay: 200,
-  })
-  animate('#hero .hero-content .subtext', {
-    opacity: [0, 1],
-    translateY: [MOTION.slideY.item, 0],
-    duration: MOTION.duration,
-    ease: MOTION.ease,
-    delay: 450,
-  })
-  animate('#hero .hero-content .hero-buttons, #hero .hero-content [data-hero-buttons]', {
-    opacity: [0, 1],
-    translateY: [MOTION.slideY.header, 0],
-    duration: MOTION.duration,
-    ease: MOTION.ease,
-    delay: 700,
-  })
-
-  // ── Tall section scroll-through ──
-  initTallSectionScroll()
-}
 
 /**
- * Detects sections taller than the viewport and wraps them in a scroll container.
- * Uses ResizeObserver so detection fires after React islands hydrate and render,
- * ensuring scrollHeight is accurate when the DOM settles.
- *
- * Pattern:
- *   wrapper (height = contentHeight) — creates scroll distance
- *     section (sticky top:0, height: vh, overflow: hidden) — pinned
- *       inner (translateY: 0 → -extraScroll) — content scrolls up
+ * Sticky scroll: each .stack-section pins at top=0, height=100vh.
+ * The inner .stack-section-inner scrolls upward via translateY sync'd to scroll.
+ * Works identically for ALL sections — no special cases.
  */
-export function initTallSectionScroll(): void {
-  const sections = document.querySelectorAll<HTMLElement>('.stack-section')
-  const vh = window.innerHeight
+export function initStickyScroll(): void {
+  const setup = () => {
+    const sections = document.querySelectorAll<HTMLElement>('.stack-section')
 
-  sections.forEach((section) => {
-    // ResizeObserver fires once content is fully rendered (after React hydration)
-    const observer = new ResizeObserver(() => {
-      const contentHeight = section.scrollHeight
-      const isTall = contentHeight > vh + 20 // 20px tolerance
+    sections.forEach((section) => {
+      const inner = section.querySelector<HTMLElement>('.stack-section-inner')
+      if (!inner) return
 
-      if (!isTall) return
+      // Always reset transform to ensure content is visible on load
+      inner.style.transform = 'translateY(0)'
 
-      // Only wrap once — bail if already wrapped
-      if (section.parentElement?.classList.contains('tall-section-wrapper')) return
+      const sectionHeight = section.scrollHeight
+      const viewportHeight = window.innerHeight
+      const scrollDistance = sectionHeight - viewportHeight
 
-      observer.disconnect() // Stop observing once we wrap
+      // Only animate sections taller than the viewport
+      if (scrollDistance <= 0) return
 
-      const extraScroll = contentHeight - vh
-
-      // ── Wrap section's children in an inner scroller ──
-      const inner = document.createElement('div')
-      inner.className = 'tall-section-inner'
-      // Move all children of section into inner
-      while (section.firstChild) {
-        inner.appendChild(section.firstChild)
-      }
-      section.appendChild(inner)
-
-      // ── Create wrapper for scroll tracking ──
-      const wrapper = document.createElement('div')
-      wrapper.className = 'tall-section-wrapper'
-      // Height = viewport height (pinned area) + extra scroll distance
-      wrapper.style.height = `${contentHeight}px`
-      wrapper.style.position = 'relative'
-      // Preserve z-index from section
-      wrapper.style.zIndex = section.style.zIndex || 'auto'
-
-      // Move section into wrapper
-      section.parentNode!.insertBefore(wrapper, section)
-      wrapper.appendChild(section)
-
-      // Section: sticky pin at viewport top, clip to vh
-      section.style.position = 'sticky'
-      section.style.top = '0'
-      section.style.height = `${vh}px`
-      section.style.overflow = 'hidden'
-      section.style.zIndex = ''
-
-      // ── anime.js: scroll-linked translateY on the INNER div ──
-      // enter: 'top top'       → start when wrapper top hits viewport top
-      // leave: 'bottom bottom' → end when wrapper bottom hits viewport bottom
-      //   offsetStart = wrapperAbsTop, offsetEnd = wrapperAbsTop + extraScroll ✓
       animate(inner, {
-        translateY: [0, -extraScroll],
+        translateY: [0, -scrollDistance],
         autoplay: onScroll({
-          target: wrapper,
+          target: section,
           enter: 'top top',
           leave: 'bottom bottom',
           sync: true,
         }),
       })
     })
+  }
 
-    observer.observe(section)
+  // Run after DOM + React hydration
+  // Small delay to ensure layout is settled before measuring
+  setTimeout(setup, 100)
+  setTimeout(setup, 800)
+
+  // Re-setup on resize
+  let resizeTimer: ReturnType<typeof setTimeout>
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer)
+    resizeTimer = setTimeout(setup, 200)
+  }, { passive: true })
+}
+
+export function initScrollAnimations(): void {
+  // ── Hero content: subtle entrance animation (content always visible first) ──
+  // Content starts visible (opacity: 1 in CSS), then gently animates
+  animate('#hero .hero-content h1', {
+    translateY: [MOTION.slideY.item, 0],
+    duration: MOTION.duration,
+    ease: MOTION.ease,
+    delay: 200,
+  })
+  animate('#hero .hero-content .subtext', {
+    translateY: [MOTION.slideY.item, 0],
+    duration: MOTION.duration,
+    ease: MOTION.ease,
+    delay: 450,
+  })
+  animate('#hero .hero-content .hero-buttons, #hero .hero-content [data-hero-buttons]', {
+    translateY: [MOTION.slideY.header, 0],
+    duration: MOTION.duration,
+    ease: MOTION.ease,
+    delay: 700,
   })
 }
