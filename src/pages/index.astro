@@ -1,0 +1,537 @@
+---
+import QrhhtNavbar from '../components/QrhhtNavbar.tsx';
+import QrhhtFooter from '../components/QrhhtFooter.tsx';
+import QrhhtHero from '../components/QrhhtHero.tsx';
+import QrhhtOfferingCards from '../components/QrhhtOfferingCards.tsx';
+import QrhhtCTAButtons from '../components/QrhhtCTAButtons.tsx';
+import '../styles/global.css';
+
+const pageTitle = "QRHHT - Dive deep. Rise higher. Live more.";
+const pageDescription = "Healing and training that awaken what's extraordinary within you.";
+const pageURL = "https://qrhht-landing.vercel.app/";
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDescription} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={pageURL} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDescription} />
+  <meta property="og:image" content="/images/hero-bg.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={pageDescription} />
+  <meta name="twitter:image" content="/images/hero-bg.jpg" />
+  <link rel="canonical" href={pageURL} />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600&family=Lato:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Lato', sans-serif; line-height: 1.6; color: #2c3e50; scroll-behavior: smooth; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    /* ── Hero (image background) ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .hero-bg-image {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: url('/images/hero-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+    }
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      z-index: 1;
+    }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      padding: 0 20px;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 300;
+      color: #ffffff;
+      margin-bottom: 1.5rem;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .hero .subtext {
+      font-size: 1.4rem;
+      color: #e8e8e8;
+      margin-bottom: 3rem;
+      line-height: 1.7;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.3);
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .cta-button {
+      display: inline-block;
+      padding: 15px 35px;
+      font-size: 1.1rem;
+      text-decoration: none;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .cta-primary { background: #d4af37; color: white; box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
+    .cta-secondary { background: #0f4c75; color: white; box-shadow: 0 4px 15px rgba(15,76,117,0.3); }
+    .cta-button:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+    .cta-primary:hover { background: #f4c842; color: white; }
+    .cta-secondary:hover { background: #1a5d8a; color: white; }
+
+    /* ── Video Section ── */
+    .video-section {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #video-wrapper {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    #video-container {
+      position: absolute;
+      border: none;
+    }
+    .video-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 1;
+    }
+    .video-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 800px;
+      padding: 0 20px;
+      color: white;
+    }
+    .video-content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    }
+    .video-content p {
+      font-size: 1.3rem;
+      color: #e8e8e8;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.3);
+    }
+    #video-unmute-btn {
+      position: absolute;
+      bottom: 30px; right: 30px;
+      z-index: 3;
+      background: rgba(255,255,255,0.9);
+      border: none;
+      border-radius: 50%;
+      width: 50px; height: 50px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+    #video-unmute-btn:hover { transform: scale(1.1); background: white; box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+    /* ── About ── */
+    .about { padding: 120px 0; background: #fff; }
+    .about-content { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .about h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: #0f4c75; margin-bottom: 2rem; font-weight: 400; }
+    .about p { font-size: 1.3rem; color: #2c3e50; line-height: 1.8; margin-bottom: 1.5rem; }
+    .about-image { width: 100%; height: 450px; background-image: url('/images/about-image.jpg'); background-size: cover; background-position: center; border-radius: 20px; opacity: 0; transform: translateX(50px); transition: all 0.8s ease; box-shadow: 0 25px 50px rgba(0,0,0,0.1); }
+    .about-image.animate { opacity: 1; transform: translateX(0); }
+
+    /* ── Offerings ── */
+    .offerings { padding: 120px 0; background: #f8f6f2; }
+    .offerings h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: #0f4c75; text-align: center; margin-bottom: 1rem; font-weight: 400; }
+    .offerings-subtext { text-align: center; font-size: 1.3rem; color: #5a6c7d; margin-bottom: 4rem; max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+    .offerings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 40px; }
+    .offering-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); transition: all 0.3s ease; border: 3px solid transparent; text-align: center; }
+    .offering-card:hover { transform: translateY(-10px); box-shadow: 0 25px 50px rgba(0,0,0,0.15); border-color: #d4af37; }
+    .offering-card h3 { font-family: 'Playfair Display', serif; font-size: 2rem; color: #0f4c75; margin-bottom: 1.5rem; font-weight: 400; }
+    .offering-card p { font-size: 1.2rem; color: #5a6c7d; line-height: 1.7; margin-bottom: 2rem; }
+
+    /* ── Training Journey ── */
+    .training-journey { padding: 120px 0; background: linear-gradient(135deg, #faf8f5 0%, #f5f2ed 100%); }
+    .training-journey h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: #0f4c75; text-align: center; margin-bottom: 2rem; font-weight: 400; }
+    .training-hero-image { width: 100%; max-width: 700px; height: 700px; background-image: url('/images/training-hero.jpg'); background-size: cover; background-position: center; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); margin: 2rem auto 3rem; }
+    .training-text { text-align: center; max-width: 800px; margin: 0 auto 4rem; font-size: 1.3rem; color: #2c3e50; line-height: 1.8; }
+    .training-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 4rem; }
+    .training-card { background: white; padding: 35px; border-radius: 15px; text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; border-top: 4px solid #d4af37; }
+    .training-card:hover { transform: translateY(-8px); box-shadow: 0 25px 40px rgba(0,0,0,0.15); }
+    .training-card-icon { width: 70px; height: 70px; background: #0f4c75; border-radius: 50%; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; font-weight: 600; }
+    .training-card h3 { font-family: 'Playfair Display', serif; color: #d4af37; margin-bottom: 1rem; font-size: 1.4rem; font-weight: 600; }
+    .training-card p { color: #5a6c7d; line-height: 1.6; font-size: 1.1rem; }
+
+    /* ── Therapy Section ── */
+    .therapy-section { padding: 120px 0; background: white; }
+    .therapy-content { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .therapy-section h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: #0f4c75; margin-bottom: 2rem; font-weight: 400; }
+    .therapy-section p { font-size: 1.3rem; color: #2c3e50; line-height: 1.8; margin-bottom: 2rem; }
+    .therapy-image { width: 100%; height: 600px; background-image: url('/images/therapy.jpg'); background-size: cover; background-position: center; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    .workshop-image { width: 100%; height: 500px; background-image: url('/images/workshop.jpg'); background-size: cover; background-position: center; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+
+    /* ── Testimonials ── */
+    .testimonial-carousel { background: #f8f6f2; padding: 80px 0; }
+    .testimonial-container { max-width: 1000px; margin: 0 auto; text-align: center; position: relative; padding: 0 80px; }
+    .testimonial-carousel h3 { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #0f4c75; margin-bottom: 3rem; font-weight: 400; }
+    .testimonial-slider { position: relative; overflow: hidden; width: 100%; }
+    .testimonial-track { display: flex; transition: transform 0.5s ease; width: 400%; }
+    .testimonial-slide { min-width: 25%; flex-shrink: 0; display: flex; align-items: center; gap: 40px; padding: 0 20px; box-sizing: border-box; }
+    .testimonial-image { width: 200px; height: 200px; border-radius: 15px; background-size: cover; background-position: center; flex-shrink: 0; box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+    .testimonial-content { flex: 1; text-align: left; }
+    .testimonial-text { font-size: 1.3rem; color: #2c3e50; line-height: 1.7; margin-bottom: 1.5rem; font-style: italic; }
+    .testimonial-author { font-size: 1.1rem; color: #0f4c75; font-weight: 600; }
+    .testimonial-nav { display: flex; justify-content: center; gap: 10px; margin-top: 2rem; }
+    .testimonial-dot { width: 12px; height: 12px; border-radius: 50%; background: #d4d4d4; cursor: pointer; transition: background 0.3s ease; }
+    .testimonial-dot.active { background: #d4af37; }
+    .carousel-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(15,76,117,0.8); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; z-index: 10; }
+    .carousel-nav:hover { background: rgba(15,76,117,1); transform: translateY(-50%) scale(1.1); }
+    .carousel-prev { left: 20px; }
+    .carousel-next { right: 20px; }
+
+    /* ── Closing CTA ── */
+    .closing-cta { padding: 120px 0; background: #0f4c75; color: white; text-align: center; }
+    .closing-cta h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 2rem; font-weight: 400; color: #d4af37; }
+    .closing-cta p { font-size: 1.3rem; max-width: 700px; margin: 0 auto 3rem; line-height: 1.8; color: #e8e8e8; }
+    .closing-buttons { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── Modal ── */
+    .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); overflow-y: auto; }
+    .modal-content { background-color: white; margin: 2% auto; padding: 20px; border-radius: 20px; width: 90%; max-width: 800px; height: 90vh; max-height: 90vh; overflow: hidden; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
+    .modal-close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; position: absolute; right: 20px; top: 15px; }
+    .modal-close:hover { color: #0f4c75; }
+
+    /* ── Animations ── */
+    .fade-in { opacity: 0; transform: translateY(40px); transition: all 0.8s ease; }
+    .fade-in.animate { opacity: 1; transform: translateY(0); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .training-hero-image { height: 400px; }
+      .hero h1 { font-size: 2.5rem; }
+      .hero .subtext { font-size: 1.2rem; }
+      .hero-buttons { flex-direction: column; align-items: center; }
+      .about-content, .therapy-content { grid-template-columns: 1fr; gap: 40px; }
+      .offerings-grid { grid-template-columns: 1fr; }
+      .training-cards { grid-template-columns: 1fr; }
+      .closing-buttons { flex-direction: column; align-items: center; }
+      .testimonial-container { padding: 0 60px; }
+      .testimonial-slide { flex-direction: column; text-align: center; padding: 0 10px; }
+      .testimonial-image { width: 180px; height: 180px; margin: 0 auto 20px; }
+      .testimonial-content { text-align: center; }
+      .carousel-prev { left: 5px; }
+      .carousel-next { right: 5px; }
+      .video-content h2 { font-size: 2.2rem; }
+    }
+    @media (max-width: 480px) {
+      .testimonial-container { padding: 0 40px; }
+      .testimonial-carousel h3 { font-size: 1.8rem; }
+      .testimonial-image { width: 150px; height: 150px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LiquidCN Navbar (React) -->
+  <QrhhtNavbar client:load />
+
+  <!-- Hero: image background -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-image"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Dive deep. Rise higher. Live more.</h1>
+      <p class="subtext">Healing and training that awaken what&#39;s extraordinary within you.</p>
+      <QrhhtHero client:load />
+    </div>
+  </section>
+
+  <!-- New Video Section (YouTube background) -->
+  <section class="video-section" id="video-section">
+    <div id="video-wrapper">
+      <div id="video-container"></div>
+    </div>
+    <button id="video-unmute-btn" aria-label="Toggle sound">&#128263;</button>
+  </section>
+
+  <!-- About -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-content">
+        <div class="fade-in">
+          <h2>What makes QRHHT different?</h2>
+          <p>We guide you beyond what you thought was possible &#8212; whether through personal sessions or practitioner training.</p>
+          <p>Healing here isn&#39;t about fixing what&#39;s broken; it&#39;s about discovering what&#39;s already extraordinary.</p>
+        </div>
+        <div class="about-image"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Offerings -->
+  <section class="offerings" id="offerings">
+    <div class="container">
+      <h2 class="fade-in">Your Pathways</h2>
+      <p class="offerings-subtext fade-in">Whether you&#39;re here for your own healing or to help others heal, QRHHT offers an experience that transforms.</p>
+      <QrhhtOfferingCards client:load />
+    </div>
+  </section>
+
+  <!-- Training Journey -->
+  <section class="training-journey">
+    <div class="container">
+      <h2 class="fade-in">The Training Journey</h2>
+      <div class="training-hero-image fade-in"></div>
+      <p class="training-text fade-in">Our 6-month program combines mentorship, immersive practice, and personal growth. An invitation to fully embody the work and confidently guide others.</p>
+      <div class="training-cards">
+        <div class="training-card fade-in">
+          <div class="training-card-icon">M</div>
+          <h3>Mentorship</h3>
+          <p>Weekly one-on-one and group sessions with experienced practitioners</p>
+        </div>
+        <div class="training-card fade-in">
+          <div class="training-card-icon">P</div>
+          <h3>Practice</h3>
+          <p>Hands-on practice and guided exploration in real-world settings</p>
+        </div>
+        <div class="training-card fade-in">
+          <div class="training-card-icon">S</div>
+          <h3>Support</h3>
+          <p>Marketing and client-building support to launch your practice</p>
+        </div>
+        <div class="training-card fade-in">
+          <div class="training-card-icon">C</div>
+          <h3>Certification</h3>
+          <p>Certificate of completion acknowledging your training and expertise</p>
+        </div>
+      </div>
+      <div style="text-align:center">
+        <QrhhtCTAButtons client:load showBooking={false} trainingLabel="Apply Now" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Therapy Section -->
+  <section class="therapy-section">
+    <div class="container">
+      <div class="therapy-content">
+        <div class="fade-in">
+          <h2>Personal Healing Sessions</h2>
+          <p>Individual sessions that take you to the root of your psyche and beyond. These are not about temporary relief &#8212; they&#39;re about transformation.</p>
+          <p>Experience a unique approach to healing that awakens what&#39;s already extraordinary within you.</p>
+          <div style="margin-top:1rem">
+            <QrhhtCTAButtons client:load showTraining={false} bookingLabel="Book Your Session" />
+          </div>
+        </div>
+        <div class="fade-in">
+          <div class="workshop-image"></div>
+          <div class="therapy-image"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonial-carousel">
+    <div class="testimonial-container">
+      <h3>What Our Community Says</h3>
+      <div class="testimonial-slider">
+        <button class="carousel-nav carousel-prev" aria-label="Previous">&#8249;</button>
+        <button class="carousel-nav carousel-next" aria-label="Next">&#8250;</button>
+        <div class="testimonial-track">
+          <div class="testimonial-slide">
+            <div class="testimonial-image" style="background-image:url('/images/testimonial-1.jpg')"></div>
+            <div class="testimonial-content">
+              <p class="testimonial-text">&#8220;This work changed not just how I see my challenges, but how I see myself. I discovered possibilities I never knew existed.&#8221;</p>
+              <p class="testimonial-author">&#8212; Sarah M.</p>
+            </div>
+          </div>
+          <div class="testimonial-slide">
+            <div class="testimonial-image" style="background-image:url('/images/testimonial-2.jpg')"></div>
+            <div class="testimonial-content">
+              <p class="testimonial-text">&#8220;The training program gave me not just skills, but a completely new way of being with others. I feel confident and aligned with my practice.&#8221;</p>
+              <p class="testimonial-author">&#8212; Marcus T.</p>
+            </div>
+          </div>
+          <div class="testimonial-slide">
+            <div class="testimonial-image" style="background-image:url('/images/testimonial-3.jpg')"></div>
+            <div class="testimonial-content">
+              <p class="testimonial-text">&#8220;I went from feeling stuck to feeling empowered. The depth of transformation I experienced was beyond anything I imagined possible.&#8221;</p>
+              <p class="testimonial-author">&#8212; Elena R.</p>
+            </div>
+          </div>
+          <div class="testimonial-slide">
+            <div class="testimonial-image" style="background-image:url('/images/testimonial-4.jpg')"></div>
+            <div class="testimonial-content">
+              <p class="testimonial-text">&#8220;The community and support I found here changed my life. This isn&#39;t just healing &#8212; it&#39;s awakening to who you really are.&#8221;</p>
+              <p class="testimonial-author">&#8212; David K.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-nav">
+        <div class="testimonial-dot active"></div>
+        <div class="testimonial-dot"></div>
+        <div class="testimonial-dot"></div>
+        <div class="testimonial-dot"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Closing CTA -->
+  <section class="closing-cta" id="contact">
+    <div class="container">
+      <h2 class="fade-in">Start your journey today.</h2>
+      <p class="fade-in">Whether you&#39;re here for yourself or for others, the path starts with one choice &#8212; to dive deeper and rise higher.</p>
+      <div class="closing-buttons">
+        <QrhhtCTAButtons client:load closingStyle={true} />
+      </div>
+    </div>
+  </section>
+
+  <!-- LiquidCN Footer (React) -->
+  <QrhhtFooter client:load />
+
+  <script>
+    // Intersection observer for fade-in animations
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('animate'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.fade-in, .about-image').forEach(el => obs.observe(el));
+
+    // Testimonial carousel
+    let cur = 0;
+    const slides = document.querySelectorAll('.testimonial-slide');
+    const dots = document.querySelectorAll('.testimonial-dot');
+    const track = document.querySelector('.testimonial-track') as HTMLElement;
+    function goTo(i: number) {
+      track.style.transform = 'translateX(-' + (i * 100) + '%)';
+      dots.forEach(d => d.classList.remove('active'));
+      dots[i].classList.add('active');
+      cur = i;
+    }
+    setInterval(() => goTo((cur + 1) % slides.length), 5000);
+    dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+    document.querySelector('.carousel-prev')?.addEventListener('click', () => goTo((cur - 1 + slides.length) % slides.length));
+    document.querySelector('.carousel-next')?.addEventListener('click', () => goTo((cur + 1) % slides.length));
+
+    // YouTube IFrame API for video section background
+    (function() {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(tag);
+    })();
+
+    let videoPlayer: any = null;
+    let videoMuted = true;
+
+    // Cover-fill sizing using ResizeObserver (no scale)
+    const _videoWrapper = document.getElementById('video-wrapper') as HTMLElement;
+
+    function sizeVideo() {
+      const iframe = _videoWrapper.querySelector('iframe') as HTMLIFrameElement | null;
+      if (!iframe) return;
+      const w = _videoWrapper.offsetWidth;
+      const h = _videoWrapper.offsetHeight;
+      let vidW: number, vidH: number;
+      if (w / h > 16 / 9) { vidW = w; vidH = w * 9 / 16; }
+      else { vidH = h; vidW = h * 16 / 9; }
+      iframe.style.position = 'absolute';
+      iframe.style.width = vidW + 'px';
+      iframe.style.height = vidH + 'px';
+      iframe.style.left = ((w - vidW) / 2) + 'px';
+      iframe.style.top = ((h - vidH) / 2) + 'px';
+      iframe.style.border = 'none';
+    }
+
+    const _videoRo = new ResizeObserver(sizeVideo);
+    _videoRo.observe(_videoWrapper);
+    window.addEventListener('resize', sizeVideo);
+
+    (window as any).onYouTubeIframeAPIReady = function() {
+      videoPlayer = new (window as any).YT.Player('video-container', {
+        videoId: 'I2CYPa_CxoU',
+        playerVars: {
+          autoplay: 1,
+          controls: 0,
+          loop: 1,
+          mute: 1,
+          playlist: 'I2CYPa_CxoU',
+          showinfo: 0,
+          rel: 0,
+          modestbranding: 1,
+          iv_load_policy: 3,
+          disablekb: 1,
+          fs: 0,
+          playsinline: 1
+        },
+        events: {
+          onReady: function(e: any) {
+            e.target.mute();
+            e.target.playVideo();
+            sizeVideo();
+          },
+          onStateChange: function(e: any) {
+            if (e.data === (window as any).YT.PlayerState.ENDED) {
+              e.target.playVideo();
+            }
+          }
+        }
+      });
+    };
+
+    document.getElementById('video-unmute-btn')?.addEventListener('click', function(this: HTMLButtonElement) {
+      if (!videoPlayer) return;
+      if (videoMuted) {
+        videoPlayer.unMute();
+        videoPlayer.setVolume(80);
+        this.textContent = '🔊';
+        videoMuted = false;
+      } else {
+        videoPlayer.mute();
+        this.textContent = '🔇';
+        videoMuted = true;
+      }
+    });
+  </script>
+</body>
+</html>

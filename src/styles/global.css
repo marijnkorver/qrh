@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@import "liquidcn/styles.css";
+
+/* Scan LiquidCN node_modules for Tailwind classes */
+@source "../../node_modules/liquidcn";
+
+/* ── Reset ── */
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+/* ── LiquidCN CSS Variable Theming ── */
+/* gold #d4af37 → oklch ≈ 76% chroma 0.135 hue 87 */
+:root {
+  --primary: oklch(76% 0.135 87);
+  --primary-foreground: oklch(100% 0 0);
+  --secondary: oklch(30% 0.06 240);
+  --secondary-foreground: oklch(100% 0 0);
+  --foreground: oklch(20% 0.03 250);
+  --background: oklch(100% 0 0);
+  --card: oklch(100% 0 0);
+  --card-foreground: oklch(20% 0.03 250);
+  --muted: oklch(95% 0.01 250);
+  --muted-foreground: oklch(55% 0.03 250);
+  --border: oklch(85% 0.02 250);
+}
+
+/* ── Fix LiquidCN Navbar top spacing ── */
+/* Navbar component defaults to top-4; force to top-0 */
+.sticky.inset-x-0.top-4 {
+  top: 0 !important;
+}
