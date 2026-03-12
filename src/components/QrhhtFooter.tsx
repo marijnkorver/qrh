@@ -30,7 +30,7 @@ export default function QrhhtFooter() {
         }}>
           {/* Logo */}
           <a href="#hero" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <img src="/images/logo.png" alt="QRHHT" style={{ height: '40px', width: 'auto' }} />
+            <img src="/images/logo.webp" alt="QRHHT" style={{ height: '40px', width: 'auto' }} loading="lazy" decoding="async" />
           </a>
 
           {/* Social */}

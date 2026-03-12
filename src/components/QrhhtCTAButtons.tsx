@@ -37,7 +37,16 @@ export default function QrhhtCTAButtons({
         alignItems: layout === 'col' ? 'stretch' : 'center',
       }}
     >
-      {showBooking && (
+      {/* ✅ Always in DOM — CSS controls visibility, never conditional rendering */}
+      <div
+        style={{
+          opacity: showBooking ? 1 : 0,
+          visibility: showBooking ? 'visible' : 'hidden',
+          pointerEvents: showBooking ? 'auto' : 'none',
+          // Collapse space when hidden so layout isn't affected
+          display: showBooking ? undefined : 'none',
+        }}
+      >
         <Button
           variant="default"
           size="lg"
@@ -46,8 +55,16 @@ export default function QrhhtCTAButtons({
         >
           {bookingLabel}
         </Button>
-      )}
-      {showTraining && (
+      </div>
+      <div
+        style={{
+          opacity: showTraining ? 1 : 0,
+          visibility: showTraining ? 'visible' : 'hidden',
+          pointerEvents: showTraining ? 'auto' : 'none',
+          // Collapse space when hidden so layout isn't affected
+          display: showTraining ? undefined : 'none',
+        }}
+      >
         <Button
           variant="outline"
           size="lg"
@@ -60,7 +77,7 @@ export default function QrhhtCTAButtons({
         >
           {trainingLabel}
         </Button>
-      )}
+      </div>
     </div>
   )
 }

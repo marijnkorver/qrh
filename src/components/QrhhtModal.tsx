@@ -48,12 +48,14 @@ export default function QrhhtModal() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  if (!isOpen) return null
-
+  // ✅ ALWAYS in DOM — CSS controls visibility via opacity/visibility/pointer-events
   return (
     <div
       ref={overlayRef}
       onClick={handleOverlayClick}
+      aria-hidden={!isOpen}
+      aria-modal={isOpen}
+      role="dialog"
       style={{
         position: 'fixed',
         inset: 0,
@@ -64,6 +66,11 @@ export default function QrhhtModal() {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '16px',
+        // CSS visibility — never removed from DOM
+        opacity: isOpen ? 1 : 0,
+        visibility: isOpen ? 'visible' : 'hidden',
+        pointerEvents: isOpen ? 'auto' : 'none',
+        transition: 'opacity 0.25s ease, visibility 0.25s ease',
       }}
     >
       <div
@@ -79,6 +86,8 @@ export default function QrhhtModal() {
           position: 'relative',
           boxShadow: '0 25px 60px rgba(0,0,0,0.4)',
           overflow: 'hidden',
+          transform: isOpen ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(20px)',
+          transition: 'transform 0.25s ease',
         }}
       >
         {/* Header bar */}
@@ -125,9 +134,9 @@ export default function QrhhtModal() {
           </button>
         </div>
 
-        {/* iframe */}
+        {/* iframe — always present, src only set when open */}
         <iframe
-          src={iframeUrl}
+          src={isOpen ? iframeUrl : 'about:blank'}
           style={{
             flex: 1,
             width: '100%',

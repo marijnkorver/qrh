@@ -37,26 +37,23 @@ html, body {
 }
 
 /* ── Sticky scroll-stack: sections pin at top and stack on each other ── */
-/* Section height = natural content height (can exceed 100vh for tall sections) */
-/* overflow: hidden clips inner div translateY out-of-bounds */
+/* Lenis handles smooth scroll natively — no JS translateY needed */
 .stack-section {
   position: sticky;
   top: 0;
   min-height: 100vh;
-  overflow: hidden;
-  /* Always visible — no initial hidden state */
+  overflow: visible;
   opacity: 1;
   visibility: visible;
 }
 
-/* ── Inner content container: animated upward by anime.js onScroll ── */
-/* For sections taller than the viewport, translateY scrolls through content */
-/* Start fully visible — no initial hidden/offset state */
-.stack-section-inner {
+/* ── Tall sections: flow naturally (not sticky) so all content is reachable ── */
+/* Applied to sections that have more content than a single viewport */
+.stack-section-tall {
+  position: relative;
+  top: auto;
   height: auto;
-  min-height: 100vh;
-  will-change: transform;
-  transform: translateY(0); /* Explicit: start at natural position */
+  overflow: visible;
   opacity: 1;
   visibility: visible;
 }
@@ -126,7 +123,7 @@ footer {
     position: sticky !important;
     top: 0 !important;
     min-height: 100svh !important;
-    overflow: hidden !important;
+    overflow: visible !important;
   }
 
   /* ── Hero ── */
@@ -220,7 +217,6 @@ footer {
   }
 
   /* ── About ── */
-  .about .stack-section-inner,
   .about {
     padding: 60px 0 !important;
   }
@@ -244,7 +240,6 @@ footer {
   }
 
   /* ── Offerings ── */
-  .offerings .stack-section-inner,
   .offerings {
     padding: 60px 0 !important;
   }
@@ -276,7 +271,6 @@ footer {
   }
 
   /* ── Training Journey ── */
-  .training-journey .stack-section-inner,
   .training-journey {
     padding: 60px 0 !important;
   }
@@ -315,7 +309,6 @@ footer {
   }
 
   /* ── Therapy Section ── */
-  .therapy-section .stack-section-inner,
   .therapy-section {
     padding: 60px 0 !important;
   }
@@ -345,7 +338,6 @@ footer {
   }
 
   /* ── Testimonials ── */
-  .testimonial-carousel .stack-section-inner,
   .testimonial-carousel {
     padding: 50px 0 !important;
   }
@@ -360,7 +352,6 @@ footer {
   }
 
   /* ── Closing CTA ── */
-  .closing-cta .stack-section-inner,
   .closing-cta {
     padding: 60px 0 !important;
   }
@@ -453,15 +444,21 @@ footer {
    AURA EFFECTS — Blue-Gold Cosmic Glow
    ════════════════════════════════════════════════ */
 
-/* Base aura wrapper — external glow via drop-shadow (doesn't affect layout, bypasses box-shadow overrides) */
+/* Base aura wrapper — static glow (no animation for perf) */
 .aura-effect {
   position: relative;
-  /* drop-shadow on filter is NOT overridden by Tailwind shadow utilities */
   filter:
     drop-shadow(0 0 12px rgba(212, 175, 55, 0.4))
     drop-shadow(0 0 25px rgba(15, 76, 117, 0.25));
-  animation: auraPulse 3s ease-in-out infinite;
   transition: filter 0.4s ease;
+}
+
+/* Only animate on non-reduced-motion, and with a slower cycle to reduce paint */
+@media (prefers-reduced-motion: no-preference) {
+  .aura-effect {
+    animation: auraPulse 6s ease-in-out infinite; /* slowed from 3s to 6s */
+    will-change: filter;
+  }
 }
 
 /* Intensify on hover */
@@ -508,24 +505,9 @@ footer {
   }
 }
 
-/* Animated gradient background for white sections */
+/* Static gradient background for white sections (removed animation for perf) */
 .cosmic-bg {
-  background: linear-gradient(
-    135deg,
-    #ffffff 0%,
-    #fdf9f0 25%,
-    #f0f6fc 50%,
-    #fdf9f0 75%,
-    #ffffff 100%
-  );
-  background-size: 400% 400%;
-  animation: cosmicBgShift 12s ease infinite;
-}
-
-@keyframes cosmicBgShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  background: linear-gradient(135deg, #ffffff 0%, #fdf9f0 35%, #f0f6fc 65%, #ffffff 100%);
 }
 
 /* Button aura — compact glow ring via box-shadow (no layout impact) */
@@ -587,6 +569,8 @@ footer {
   z-index: 1; /* Above body bg, below all stack-sections (z-index 10+) */
   pointer-events: none;
   overflow: visible; /* Never clips auras */
+  contain: layout style; /* Isolate layout/style from rest of page */
+  will-change: auto; /* No transform — don't create unnecessary GPU layer */
 }
 
 /* Plasma zones — viewport-percentage positions spread across the page */
@@ -621,7 +605,13 @@ footer {
 }
 
 /* Keep closing CTA and video section their own distinct background */
-.video-section { background: #0a1a2e !important; }
+/* Video section needs overflow:hidden to contain the absolute-positioned iframe */
+.video-section {
+  background: #0a1a2e !important;
+  overflow: hidden !important;
+  height: 100vh !important;
+  min-height: 100vh !important;
+}
 .closing-cta { background: #0f4c75 !important; }
 
 /* Global page background — white base */
@@ -639,6 +629,8 @@ body {
   z-index: 0;
   filter: blur(32px);
   will-change: opacity;
+  transform: translateZ(0); /* Force GPU compositing layer */
+  backface-visibility: hidden;
   /* CSS-only opacity pulse — no JS, no rotate, no morph */
 }
 
@@ -734,32 +726,37 @@ body {
   50%       { opacity: 0.6; }
 }
 
-/* Plasma background container: auras are now in .plasma-background (fixed),
-   not inside stack sections — sections are transparent so plasma shows through.
-   Inner div content needs position:relative to sit above the fixed plasma layer. */
-.stack-section-inner {
-  position: relative;
-  z-index: 1;
-}
-/* Fallback for sections without inner div (e.g. hero with absolute children) */
-.stack-section > * {
+/* Plasma background container: auras are in .plasma-background (fixed).
+   Direct children of stack sections need z-index to sit above the plasma layer. */
+.stack-section > *,
+.stack-section-tall > * {
   position: relative;
   z-index: 1;
 }
 
-/* ── Image Aura: pulsating glow for all section images ── */
+/* Tall sections: white background by default */
+.stack-section-tall {
+  background: #ffffff;
+}
+
+/* ── Image Aura: static glow for all section images (no animation = no paint cost) ── */
 .aura-image {
   position: relative;
   overflow: visible !important;
-}
-
-/* Use drop-shadow on the element itself for images — avoids z-index issues */
-.aura-image {
+  /* Static drop-shadow — GPU composited, zero animation overhead */
   filter:
     drop-shadow(0 0 25px rgba(212, 175, 55, 0.55))
     drop-shadow(0 0 55px rgba(32, 178, 170, 0.30))
     drop-shadow(0 0 80px rgba(15, 76, 117, 0.25));
-  animation: imageAuraPulse 5s ease-in-out infinite;
+  transform: translateZ(0); /* Force GPU layer */
+}
+
+/* Only animate on non-reduced-motion */
+@media (prefers-reduced-motion: no-preference) {
+  .aura-image {
+    animation: imageAuraPulse 8s ease-in-out infinite; /* slowed from 5s */
+    will-change: filter;
+  }
 }
 
 @keyframes imageAuraPulse {

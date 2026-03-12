@@ -49,7 +49,7 @@ export default function QrhhtNavbar() {
       {/* Desktop */}
       <NavBody>
         <a href="#hero" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-          <img src="/images/logo.png" alt="QRHHT" style={{ height: '40px', width: 'auto' }} />
+          <img src="/images/logo.webp" alt="QRHHT" style={{ height: '40px', width: 'auto' }} loading="eager" fetchPriority="high" decoding="sync" />
         </a>
         <NavItems
           items={navItems}
@@ -68,7 +68,7 @@ export default function QrhhtNavbar() {
       <MobileNav>
         <MobileNavHeader>
           <a href="#hero" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            <img src="/images/logo.png" alt="QRHHT" style={{ height: '36px', width: 'auto' }} />
+            <img src="/images/logo.webp" alt="QRHHT" style={{ height: '36px', width: 'auto' }} loading="eager" fetchPriority="high" decoding="sync" />
           </a>
           <MobileNavToggle
             isOpen={isMobileMenuOpen}

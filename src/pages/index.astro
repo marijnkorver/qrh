@@ -6,6 +6,8 @@ import QrhhtOfferingCards from '../components/QrhhtOfferingCards.tsx';
 import QrhhtCTAButtons from '../components/QrhhtCTAButtons.tsx';
 import QrhhtTestimonials from '../components/QrhhtTestimonials.tsx';
 import QrhhtModal from '../components/QrhhtModal.tsx';
+import { QrhhtLenis } from '../components/QrhhtLenis.tsx';
+import { QrhhtHeroScroll } from '../components/QrhhtHeroScroll.tsx';
 import '../styles/global.css';
 
 const pageTitle = "QRHHT - Dive deep. Rise higher. Live more.";
@@ -33,10 +35,25 @@ const pageURL = "https://qrhht-landing.vercel.app/";
   <link rel="canonical" href={pageURL} />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" href="/images/lighthouse-icon-180.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600&family=Lato:wght@300;400;600&display=swap" rel="stylesheet" />
+
+  <!-- Resource hints: preconnect to external domains -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://www.youtube.com" />
+  <link rel="dns-prefetch" href="https://link.msgsndr.com" />
+
+  <!-- Preload hero image (LCP) — WebP with JPG fallback -->
+  <link rel="preload" as="image" href="/images/hero-bg.webp" fetchpriority="high"
+    imagesrcset="/images/hero-bg-800.webp 800w, /images/hero-bg-1200.webp 1200w, /images/hero-bg.webp 1920w"
+    imagesizes="100vw" />
+
+  <!-- Google Fonts: load asynchronously to avoid render-blocking -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600&family=Lato:wght@300;400;600&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600&family=Lato:wght@300;400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600&family=Lato:wght@300;400;600&display=swap" rel="stylesheet" /></noscript>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Lato', sans-serif; line-height: 1.6; color: #2c3e50; scroll-behavior: smooth; }
+    body { font-family: 'Lato', sans-serif; line-height: 1.6; color: #2c3e50; }
     .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
     /* ── Hero (image background) ── */
@@ -51,33 +68,13 @@ const pageURL = "https://qrhht-landing.vercel.app/";
       text-align: center;
       background: #ffffff;
     }
-    /* Outer: white bg shows through padding gap */
+    /* Hero background image placeholder (LCP image is added via <img> tag) */
     .hero-bg-image {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
       z-index: 0;
-      background: #ffffff;
-    }
-    /* Inner image with rounded corners */
-    .hero-bg-image::after {
-      content: '';
-      position: absolute;
-      top: 80px; left: 80px;
-      right: 80px; bottom: 80px;
-      background-image: url('/images/hero-bg.jpg');
-      background-size: cover;
-      background-position: center;
-      border-radius: 20px;
-    }
-    /* Subtle overlay on the inner image only (same inset) */
-    .hero-bg-image::before {
-      content: '';
-      position: absolute;
-      top: 80px; left: 80px;
-      right: 80px; bottom: 80px;
-      background: rgba(0, 0, 0, 0.25);
-      border-radius: 20px;
-      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
     }
     /* Gold shimmer accent at top */
     .hero-gold-accent {
@@ -100,6 +97,7 @@ const pageURL = "https://qrhht-landing.vercel.app/";
       0%, 100% { transform: translateY(0) translateZ(0); }
       50% { transform: translateY(-8px) translateZ(15px); }
     }
+    /* Hero LCP image visible immediately (no fade animation) */
     .hero-content {
       position: relative;
       z-index: 3;
@@ -194,7 +192,7 @@ const pageURL = "https://qrhht-landing.vercel.app/";
     .about-content { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
     .about h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: #0f4c75; margin-bottom: 2rem; font-weight: 400; }
     .about p { font-size: 1.3rem; color: #2c3e50; line-height: 1.8; margin-bottom: 1.5rem; }
-    .about-image { width: 100%; height: 450px; background-image: url('/images/about-image.jpg'); background-size: cover; background-position: center; border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.1); }
+    .about-image { width: 100%; height: 450px; background-image: url('/images/about-image.webp'); background-size: cover; background-position: center; border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.1); }
 
     /* ── Offerings ── */
     .offerings { background: #ffffff; }
@@ -209,7 +207,7 @@ const pageURL = "https://qrhht-landing.vercel.app/";
     /* ── Training Journey ── */
     .training-journey { background: #ffffff; }
     .training-journey h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: #0f4c75; text-align: center; margin-bottom: 2rem; font-weight: 400; }
-    .training-hero-image { width: 100%; max-width: 700px; height: 700px; background-image: url('/images/training-hero.jpg'); background-size: cover; background-position: center; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); margin: 2rem auto 3rem; }
+    .training-hero-image { width: 100%; max-width: 700px; height: 700px; background-image: url('/images/training-hero.webp'); background-size: cover; background-position: center; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); margin: 2rem auto 3rem; }
     .training-text { text-align: center; max-width: 800px; margin: 0 auto 4rem; font-size: 1.3rem; color: #2c3e50; line-height: 1.8; }
     .training-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 4rem; }
     .training-card { background: white; padding: 35px; border-radius: 15px; text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; border-top: 4px solid #d4af37; }
@@ -223,8 +221,8 @@ const pageURL = "https://qrhht-landing.vercel.app/";
     .therapy-content { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
     .therapy-section h2 { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: #0f4c75; margin-bottom: 2rem; font-weight: 400; }
     .therapy-section p { font-size: 1.3rem; color: #2c3e50; line-height: 1.8; margin-bottom: 2rem; }
-    .therapy-image { width: 100%; height: 600px; background-image: url('/images/therapy.jpg'); background-size: cover; background-position: center; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-    .workshop-image { width: 100%; height: 500px; background-image: url('/images/workshop.jpg'); background-size: cover; background-position: center; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+    .therapy-image { width: 100%; height: 600px; background-image: url('/images/therapy.webp'); background-size: cover; background-position: center; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    .workshop-image { width: 100%; height: 500px; background-image: url('/images/workshop.webp'); background-size: cover; background-position: center; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
 
     /* ── Testimonials ── */
     .testimonial-carousel { background: #ffffff; }
@@ -266,47 +264,49 @@ const pageURL = "https://qrhht-landing.vercel.app/";
 </head>
 <body>
 
-  <!-- Fixed plasma background container — behind ALL sections, no clipping -->
-  <div class="plasma-background" aria-hidden="true">
-    <!-- 5 strategic auras: top-left, top-right, center, bottom-left, bottom-right -->
-    <div class="plasma-aura sz-lg col-gold  plasma-zone-1 delay-1"></div>
-    <div class="plasma-aura sz-md col-teal  plasma-zone-3 delay-2"></div>
-    <div class="plasma-aura sz-md col-aurora plasma-zone-7 delay-3"></div>
-    <div class="plasma-aura sz-lg col-navy  plasma-zone-4 delay-4"></div>
-    <div class="plasma-aura sz-md col-gold  plasma-zone-12 delay-2"></div>
-  </div>
+  <!-- Lenis smooth scroll wrapper (React, client:load) -->
+  <QrhhtLenis client:load>
 
-  <!-- LiquidCN Navbar (React) -->
-  <QrhhtNavbar client:load />
-
-  <!-- Gold accent line at very top (above navbar) -->
-  <div class="hero-gold-accent"></div>
-
-  <!-- Hero: image background -->
-  <section class="hero stack-section" id="hero" style="z-index: 10;">
-    <div class="stack-section-inner" style="position:relative;height:100vh;">
-      <div class="hero-bg-image"></div>
-      <div class="hero-content">
-        <h1>Dive deep. Rise higher. Live more.</h1>
-        <p class="subtext">Healing and training that awaken what&#39;s extraordinary within you.</p>
-        <QrhhtHero client:load />
-      </div>
+    <!-- Fixed plasma background container — behind ALL sections, no clipping (reduced auras for perf) -->
+    <div class="plasma-background" aria-hidden="true">
+      <!-- 3 strategic auras: top-left, top-right, center -->
+      <div class="plasma-aura sz-lg col-gold  plasma-zone-1 delay-1"></div>
+      <div class="plasma-aura sz-md col-teal  plasma-zone-3 delay-2"></div>
+      <div class="plasma-aura sz-md col-aurora plasma-zone-7 delay-3"></div>
     </div>
-  </section>
 
-  <!-- New Video Section (YouTube background) -->
-  <section class="video-section stack-section" id="video-section" style="z-index: 20;">
-    <div class="stack-section-inner" style="position:relative;height:100vh;">
-      <div id="video-wrapper">
+    <!-- LiquidCN Navbar (React) -->
+    <QrhhtNavbar client:load />
+
+    <!-- Gold accent line at very top (above navbar) -->
+    <div class="hero-gold-accent"></div>
+
+    <!-- Hero: Framer Motion scroll effect (scale + rotate + opacity) -->
+    <!-- QrhhtHeroScroll creates a 200vh spacer + sticky motion wrapper -->
+    <QrhhtHeroScroll client:load>
+      <section class="hero" id="hero" style="position:relative;height:100vh;overflow:hidden;background:#ffffff;display:flex;align-items:center;justify-content:center;text-align:center;">
+        <div class="hero-bg-image">
+          <!-- Preload hero image for LCP -->
+          <img src="/images/hero-bg-400.webp" alt="Quantum Root Healing" class="hero-img-lcp" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:20px;" loading="eager" fetchpriority="high" decoding="sync" />
+        </div>
+        <div class="hero-content">
+          <h1>Dive deep. Rise higher. Live more.</h1>
+          <p class="subtext">Healing and training that awaken what&#39;s extraordinary within you.</p>
+          <QrhhtHero client:idle />
+        </div>
+      </section>
+    </QrhhtHeroScroll>
+
+    <!-- New Video Section (YouTube background) -->
+    <section class="video-section stack-section" id="video-section" style="z-index: 20;">
+      <div id="video-wrapper" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;overflow:hidden;">
         <div id="video-container"></div>
       </div>
       <button id="video-unmute-btn" aria-label="Toggle sound">&#128263;</button>
-    </div>
-  </section>
+    </section>
 
-  <!-- About -->
-  <section class="about stack-section" id="about" style="z-index: 30;">
-    <div class="stack-section-inner" style="padding:120px 0;">
+    <!-- About -->
+    <section class="about stack-section" id="about" style="z-index: 30;padding:120px 0;">
       <div class="container">
         <div class="about-content">
           <div class="fade-in">
@@ -317,23 +317,19 @@ const pageURL = "https://qrhht-landing.vercel.app/";
           <div class="about-image aura-image fade-in"></div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Offerings -->
-  <section class="offerings stack-section" id="offerings" style="z-index: 40;">
-    <div class="stack-section-inner" style="padding:120px 0;">
+    <!-- Offerings -->
+    <section class="offerings stack-section" id="offerings" style="z-index: 40;padding:120px 0;">
       <div class="container">
         <h2 class="fade-in">Your Pathways</h2>
         <p class="offerings-subtext fade-in">Whether you&#39;re here for your own healing or to help others heal, QRHHT offers an experience that transforms.</p>
-        <QrhhtOfferingCards client:load />
+        <QrhhtOfferingCards client:visible />
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Training Journey -->
-  <section class="training-journey stack-section" style="z-index: 50;">
-    <div class="stack-section-inner" style="padding:120px 0;">
+    <!-- Training Journey -->
+    <section class="training-journey stack-section-tall" style="z-index: 50;padding:120px 0;">
       <div class="container">
         <h2 class="fade-in">The Training Journey</h2>
         <div class="training-hero-image aura-image fade-in"></div>
@@ -361,15 +357,13 @@ const pageURL = "https://qrhht-landing.vercel.app/";
           </div>
         </div>
         <div style="text-align:center">
-          <QrhhtCTAButtons client:load showBooking={false} trainingLabel="Train With Me" />
+          <QrhhtCTAButtons client:visible showBooking={false} trainingLabel="Train With Me" />
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Therapy Section -->
-  <section class="therapy-section stack-section" style="z-index: 60;">
-    <div class="stack-section-inner" style="padding:120px 0;">
+    <!-- Therapy Section -->
+    <section class="therapy-section stack-section-tall" style="z-index: 60;padding:120px 0;">
       <div class="container">
         <div class="therapy-content">
           <div class="fade-in">
@@ -377,7 +371,7 @@ const pageURL = "https://qrhht-landing.vercel.app/";
             <p>Individual sessions that take you to the root of your psyche and beyond. These are not about temporary relief &#8212; they&#39;re about transformation.</p>
             <p>Experience a unique approach to healing that awakens what&#39;s already extraordinary within you.</p>
             <div style="margin-top:1rem">
-              <QrhhtCTAButtons client:load showTraining={false} bookingLabel="Book A Session" />
+              <QrhhtCTAButtons client:visible showTraining={false} bookingLabel="Book A Session" />
             </div>
           </div>
           <div class="fade-in">
@@ -386,142 +380,133 @@ const pageURL = "https://qrhht-landing.vercel.app/";
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Testimonials (Swiper) -->
-  <section class="testimonial-carousel stack-section" style="z-index: 70;">
-    <div class="stack-section-inner" style="padding:80px 0;">
+    <!-- Testimonials (Swiper) -->
+    <section class="testimonial-carousel stack-section-tall" style="z-index: 70;padding:80px 0;">
       <div class="testimonial-container">
         <h3>What Our Community Says</h3>
-        <QrhhtTestimonials client:load />
+        <QrhhtTestimonials client:visible />
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Closing CTA -->
-  <section class="closing-cta stack-section" id="contact" style="z-index: 80;">
-    <div class="stack-section-inner" style="padding:120px 0;">
+    <!-- Closing CTA -->
+    <section class="closing-cta stack-section-tall" id="contact" style="z-index: 80;padding:120px 0;">
       <div class="container">
         <h2 class="fade-in">Start your journey today.</h2>
         <p class="fade-in">Whether you&#39;re here for yourself or for others, the path starts with one choice &#8212; to dive deeper and rise higher.</p>
         <div class="closing-buttons">
-          <QrhhtCTAButtons client:load closingStyle={true} />
+          <QrhhtCTAButtons client:visible closingStyle={true} />
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Anime.js scroll animations + sticky scroll -->
-  <script>
-    import { initScrollAnimations, initStickyScroll } from '../lib/animations';
-    // Run after DOM ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        initScrollAnimations();
-        initStickyScroll();
-      });
-    } else {
-      initScrollAnimations();
-      initStickyScroll();
-    }
-  </script>
+    <!-- Intersection observer for fade-in animations -->
+    <script>
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('animate'); });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+      document.querySelectorAll('.fade-in, .about-image').forEach(el => obs.observe(el));
+    </script>
 
-  <!-- LiquidCN Footer (React) -->
-  <QrhhtFooter client:load />
+    <!-- YouTube IFrame API — lazy-loaded via IntersectionObserver -->
+    <script>
+      let videoPlayer: any = null;
+      let videoMuted = true;
+      let ytApiLoaded = false;
 
-  <!-- Global Booking Modal (singleton, listens to qrhht-open-modal events) -->
-  <QrhhtModal client:load />
+      const _videoWrapper = document.getElementById('video-wrapper') as HTMLElement;
 
-  <script>
-    // Intersection observer for fade-in animations (legacy fallback)
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('animate'); });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    document.querySelectorAll('.fade-in, .about-image').forEach(el => obs.observe(el));
+      function sizeVideo() {
+        const iframe = _videoWrapper?.querySelector('iframe') as HTMLIFrameElement | null;
+        if (!iframe) return;
+        const w = _videoWrapper.offsetWidth;
+        const h = _videoWrapper.offsetHeight;
+        let vidW: number, vidH: number;
+        if (w / h > 16 / 9) { vidW = w; vidH = w * 9 / 16; }
+        else { vidH = h; vidW = h * 16 / 9; }
+        iframe.style.position = 'absolute';
+        iframe.style.width = vidW + 'px';
+        iframe.style.height = vidH + 'px';
+        iframe.style.left = ((w - vidW) / 2) + 'px';
+        iframe.style.top = ((h - vidH) / 2) + 'px';
+        iframe.style.border = 'none';
+      }
 
-    // Tall section scroll-through handled by animations.ts (initTallSectionScroll)
+      if (_videoWrapper) {
+        const _videoRo = new ResizeObserver(sizeVideo);
+        _videoRo.observe(_videoWrapper);
+        window.addEventListener('resize', sizeVideo, { passive: true });
+      }
 
+      function loadYouTube() {
+        if (ytApiLoaded) return;
+        ytApiLoaded = true;
+        const tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(tag);
+      }
 
-
-    // YouTube IFrame API for video section background
-    (function() {
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      document.head.appendChild(tag);
-    })();
-
-    let videoPlayer: any = null;
-    let videoMuted = true;
-
-    // Cover-fill sizing using ResizeObserver (no scale)
-    const _videoWrapper = document.getElementById('video-wrapper') as HTMLElement;
-
-    function sizeVideo() {
-      const iframe = _videoWrapper.querySelector('iframe') as HTMLIFrameElement | null;
-      if (!iframe) return;
-      const w = _videoWrapper.offsetWidth;
-      const h = _videoWrapper.offsetHeight;
-      let vidW: number, vidH: number;
-      if (w / h > 16 / 9) { vidW = w; vidH = w * 9 / 16; }
-      else { vidH = h; vidW = h * 16 / 9; }
-      iframe.style.position = 'absolute';
-      iframe.style.width = vidW + 'px';
-      iframe.style.height = vidH + 'px';
-      iframe.style.left = ((w - vidW) / 2) + 'px';
-      iframe.style.top = ((h - vidH) / 2) + 'px';
-      iframe.style.border = 'none';
-    }
-
-    const _videoRo = new ResizeObserver(sizeVideo);
-    _videoRo.observe(_videoWrapper);
-    window.addEventListener('resize', sizeVideo);
-
-    (window as any).onYouTubeIframeAPIReady = function() {
-      videoPlayer = new (window as any).YT.Player('video-container', {
-        videoId: 'I2CYPa_CxoU',
-        playerVars: {
-          autoplay: 1,
-          controls: 0,
-          loop: 1,
-          mute: 1,
-          playlist: 'I2CYPa_CxoU',
-          showinfo: 0,
-          rel: 0,
-          modestbranding: 1,
-          iv_load_policy: 3,
-          disablekb: 1,
-          fs: 0,
-          playsinline: 1
-        },
-        events: {
-          onReady: function(e: any) {
-            e.target.mute();
-            e.target.playVideo();
-            sizeVideo();
+      (window as any).onYouTubeIframeAPIReady = function() {
+        videoPlayer = new (window as any).YT.Player('video-container', {
+          videoId: 'I2CYPa_CxoU',
+          playerVars: {
+            autoplay: 1, controls: 0, loop: 1, mute: 1,
+            playlist: 'I2CYPa_CxoU', showinfo: 0, rel: 0,
+            modestbranding: 1, iv_load_policy: 3, disablekb: 1, fs: 0, playsinline: 1
           },
-          onStateChange: function(e: any) {
-            if (e.data === (window as any).YT.PlayerState.ENDED) {
-              e.target.playVideo();
+          events: {
+            onReady: function(e: any) { e.target.mute(); e.target.playVideo(); sizeVideo(); },
+            onStateChange: function(e: any) {
+              if (e.data === (window as any).YT.PlayerState.ENDED) e.target.playVideo();
             }
           }
+        });
+      };
+
+      const videoSection = document.getElementById('video-section');
+      if (videoSection) {
+        const videoObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) { loadYouTube(); videoObserver.disconnect(); }
+            });
+          },
+          { rootMargin: '200px' }
+        );
+        videoObserver.observe(videoSection);
+      }
+
+      document.getElementById('video-unmute-btn')?.addEventListener('click', function(this: HTMLButtonElement) {
+        if (!videoPlayer) return;
+        if (videoMuted) {
+          videoPlayer.unMute(); videoPlayer.setVolume(80);
+          this.textContent = '🔊'; videoMuted = false;
+        } else {
+          videoPlayer.mute(); this.textContent = '🔇'; videoMuted = true;
         }
       });
-    };
+    </script>
 
-    document.getElementById('video-unmute-btn')?.addEventListener('click', function(this: HTMLButtonElement) {
-      if (!videoPlayer) return;
-      if (videoMuted) {
-        videoPlayer.unMute();
-        videoPlayer.setVolume(80);
-        this.textContent = '🔊';
-        videoMuted = false;
-      } else {
-        videoPlayer.mute();
-        this.textContent = '🔇';
-        videoMuted = true;
+    <!-- Anime.js entrance animations: defer until after page load to unblock LCP -->
+    <script>
+      import { initScrollAnimations } from '../lib/animations';
+      function initAnimations() {
+        initScrollAnimations();
       }
-    });
-  </script>
-</body>
+      if (document.readyState === 'complete') {
+        initAnimations();
+      } else {
+        window.addEventListener('load', initAnimations, { once: true });
+      }
+    </script>
+
+    <!-- LiquidCN Footer (React) -->
+    <QrhhtFooter client:visible />
+
+    <!-- Global Booking Modal (singleton, listens to qrhht-open-modal events) -->
+    <QrhhtModal client:idle />
+
+  </QrhhtLenis>
+
 </html>

@@ -10,25 +10,25 @@ import '../lib/effect-cards-stack.css';
 
 const testimonials = [
   {
-    image: '/images/testimonial-1.jpg',
+    image: '/images/testimonial-1.webp',
     text: 'This work changed not just how I see my challenges, but how I see myself. I discovered possibilities I never knew existed.',
     author: 'Sarah M.',
     role: 'Life Transformation Client',
   },
   {
-    image: '/images/testimonial-2.jpg',
+    image: '/images/testimonial-2.webp',
     text: 'The training program gave me not just skills, but a completely new way of being with others. I feel confident and aligned with my practice.',
     author: 'Marcus T.',
     role: 'Academy Graduate',
   },
   {
-    image: '/images/testimonial-3.jpg',
+    image: '/images/testimonial-3.webp',
     text: 'I went from feeling stuck to feeling empowered. The depth of transformation I experienced was beyond anything I imagined possible.',
     author: 'Elena R.',
     role: 'Healing Journey Client',
   },
   {
-    image: '/images/testimonial-4.jpg',
+    image: '/images/testimonial-4.webp',
     text: "The community and support I found here changed my life. This isn't just healing — it's awakening to who you really are.",
     author: 'David K.',
     role: 'Community Member',
@@ -120,7 +120,7 @@ export default function QrhhtTestimonials() {
           text-align: center;
           transform-style: preserve-3d;
           backface-visibility: hidden;
-          animation: testimonialGlow 3s ease-in-out infinite;
+          animation: testimonialGlow 6s ease-in-out infinite;
         }
         @keyframes testimonialGlow {
           0%, 100% { box-shadow: 0 24px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(212,175,55,0.15), 0 0 20px rgba(212,175,55,0.15), 0 0 40px rgba(15,76,117,0.2); }
@@ -300,9 +300,11 @@ export default function QrhhtTestimonials() {
                 {/* Back side */}
                 <div className="cards-stack-back testimonial-back">
                   <img
-                    src="/images/logo.png"
+                    src="/images/logo.webp"
                     alt="QRHHT Logo"
                     className="testimonial-back-logo"
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none';
                     }}
@@ -317,6 +319,8 @@ export default function QrhhtTestimonials() {
                     src={t.image}
                     alt={t.author}
                     className="testimonial-avatar"
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => {
                       const img = e.target as HTMLImageElement;
                       img.style.display = 'none';
