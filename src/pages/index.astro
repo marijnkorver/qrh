@@ -1,13 +1,12 @@
 ---
 import QrhhtNavbar from '../components/QrhhtNavbar.tsx';
 import QrhhtFooter from '../components/QrhhtFooter.tsx';
-import QrhhtHero from '../components/QrhhtHero.tsx';
 import QrhhtOfferingCards from '../components/QrhhtOfferingCards.tsx';
 import QrhhtCTAButtons from '../components/QrhhtCTAButtons.tsx';
 import QrhhtTestimonials from '../components/QrhhtTestimonials.tsx';
 import QrhhtModal from '../components/QrhhtModal.tsx';
 import { QrhhtLenis } from '../components/QrhhtLenis.tsx';
-import { QrhhtHeroScroll } from '../components/QrhhtHeroScroll.tsx';
+import QrhhtHeroScroll from '../components/QrhhtHeroScroll.tsx';
 import '../styles/global.css';
 
 const pageTitle = "QRHHT - Dive deep. Rise higher. Live more.";
@@ -42,9 +41,9 @@ const pageURL = "https://qrhht-landing.vercel.app/";
   <link rel="preconnect" href="https://www.youtube.com" />
   <link rel="dns-prefetch" href="https://link.msgsndr.com" />
 
-  <!-- Preload hero image (LCP) — WebP with JPG fallback -->
-  <link rel="preload" as="image" href="/images/hero-bg.webp" fetchpriority="high"
-    imagesrcset="/images/hero-bg-800.webp 800w, /images/hero-bg-1200.webp 1200w, /images/hero-bg.webp 1920w"
+  <!-- Preload hero image (LCP) — high-res WebP (served from React component) -->
+  <link rel="preload" as="image" href="/images/hero-bg-1920-hq.webp" fetchpriority="high"
+    imagesrcset="/images/hero-bg-800.webp 800w, /images/hero-bg-1200.webp 1200w, /images/hero-bg-1920-hq.webp 1920w, /images/hero-bg-2400.webp 2400w"
     imagesizes="100vw" />
 
   <!-- Google Fonts: load asynchronously to avoid render-blocking -->
@@ -56,29 +55,9 @@ const pageURL = "https://qrhht-landing.vercel.app/";
     body { font-family: 'Lato', sans-serif; line-height: 1.6; color: #2c3e50; }
     .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-    /* ── Hero (image background) ── */
-    .hero {
-      position: relative;
-      height: 100vh;
-      width: 100%;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      background: #ffffff;
-    }
-    /* Hero background image placeholder (LCP image is added via <img> tag) */
-    .hero-bg-image {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
-    /* Gold shimmer accent at top */
+    /* ── Gold shimmer accent at top ── */
     .hero-gold-accent {
-      position: absolute;
+      position: fixed;
       top: 0; left: 0; width: 100%;
       height: 3px;
       background: linear-gradient(
@@ -89,102 +68,11 @@ const pageURL = "https://qrhht-landing.vercel.app/";
         rgba(212, 175, 55, 0.6) 70%,
         transparent 100%
       );
-      z-index: 60;
+      z-index: 9999;
       pointer-events: none;
     }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes heroFloat {
-      0%, 100% { transform: translateY(0) translateZ(0); }
-      50% { transform: translateY(-8px) translateZ(15px); }
-    }
-    /* Hero LCP image visible immediately (no fade animation) */
-    .hero-content {
-      position: relative;
-      z-index: 3;
-      max-width: 800px;
-      padding: 80px 20px 0;
-      transform-style: preserve-3d;
-      animation: heroFloat 7s ease-in-out infinite;
-    }
-    .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 3.5rem;
-      font-weight: 300;
-      color: #ffffff;
-      margin-bottom: 1.5rem;
-      letter-spacing: 1px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    }
-    .hero .subtext {
-      font-size: 1.4rem;
-      color: #f0f0f0;
-      margin-bottom: 3rem;
-      line-height: 1.7;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-    }
-    .hero-buttons {
-      display: flex;
-      gap: 32px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .cta-button {
-      display: inline-block;
-      padding: 15px 35px;
-      font-size: 1.1rem;
-      text-decoration: none;
-      border-radius: 30px;
-      transition: all 0.3s ease;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-    }
-    .cta-primary { background: #d4af37; color: white; box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
-    .cta-secondary { background: #0f4c75; color: white; box-shadow: 0 4px 15px rgba(15,76,117,0.3); }
-    .cta-button:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
-    .cta-primary:hover { background: #f4c842; color: white; }
-    .cta-secondary:hover { background: #1a5d8a; color: white; }
-
-    /* ── Video Section ── */
-    .video-section {
-      background: #0a1a2e;
-      min-height: 100vh;
-      padding: 0;
-    }
-    .video-section::before,
-    .video-section::after {
-      display: none;
-    }
-    #video-wrapper {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-      padding: 0;
-      box-sizing: border-box;
-      background: #0a1a2e;
-    }
-    #video-container {
-      position: absolute;
-      border: none;
-    }
-    #video-unmute-btn {
-      position: absolute;
-      bottom: 30px; right: 30px;
-      z-index: 3;
-      background: rgba(255,255,255,0.9);
-      border: none;
-      border-radius: 50%;
-      width: 50px; height: 50px;
-      font-size: 1.5rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    }
+    /* Video unmute button hover */
     #video-unmute-btn:hover { transform: scale(1.1); background: white; box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
 
     /* ── About ── */
@@ -245,16 +133,6 @@ const pageURL = "https://qrhht-landing.vercel.app/";
     .fade-in { transition: all 0.8s ease; }
     .fade-in.animate { opacity: 1; transform: translateY(0); }
 
-    /* ── Hero content: always visible on load — no initial hidden state ── */
-    .hero-content h1,
-    .hero-content .subtext {
-      opacity: 1;
-    }
-    /* Hero content needs top padding to sit below fixed navbar */
-    .hero-content {
-      padding-top: 100px !important;
-    }
-
     /* ── Responsive (handled by global.css mobile media queries) ── */
     @media (max-width: 768px) {
       /* Legacy overrides kept minimal — global.css handles the bulk */
@@ -281,29 +159,10 @@ const pageURL = "https://qrhht-landing.vercel.app/";
     <!-- Gold accent line at very top (above navbar) -->
     <div class="hero-gold-accent"></div>
 
-    <!-- Hero: Framer Motion scroll effect (scale + rotate + opacity) -->
-    <!-- QrhhtHeroScroll creates a 200vh spacer + sticky motion wrapper -->
-    <QrhhtHeroScroll client:load>
-      <section class="hero" id="hero" style="position:relative;height:100vh;overflow:hidden;background:#ffffff;display:flex;align-items:center;justify-content:center;text-align:center;">
-        <div class="hero-bg-image">
-          <!-- Preload hero image for LCP -->
-          <img src="/images/hero-bg-400.webp" alt="Quantum Root Healing" class="hero-img-lcp" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:20px;" loading="eager" fetchpriority="high" decoding="sync" />
-        </div>
-        <div class="hero-content">
-          <h1>Dive deep. Rise higher. Live more.</h1>
-          <p class="subtext">Healing and training that awaken what&#39;s extraordinary within you.</p>
-          <QrhhtHero client:idle />
-        </div>
-      </section>
-    </QrhhtHeroScroll>
-
-    <!-- New Video Section (YouTube background) -->
-    <section class="video-section stack-section" id="video-section" style="z-index: 20;">
-      <div id="video-wrapper" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;overflow:hidden;">
-        <div id="video-container"></div>
-      </div>
-      <button id="video-unmute-btn" aria-label="Toggle sound">&#128263;</button>
-    </section>
+    <!-- Hero + Video: reference pattern (200vh container, sticky hero, relative video) -->
+    <!-- HeroSection = sticky top-0 h-screen (stays visible, scale+rotate) -->
+    <!-- VideoSection = relative h-screen (scrolls over hero)               -->
+    <QrhhtHeroScroll client:load />
 
     <!-- About -->
     <section class="about stack-section" id="about" style="z-index: 30;padding:120px 0;">
@@ -415,11 +274,10 @@ const pageURL = "https://qrhht-landing.vercel.app/";
       let videoMuted = true;
       let ytApiLoaded = false;
 
-      const _videoWrapper = document.getElementById('video-wrapper') as HTMLElement;
-
       function sizeVideo() {
+        const _videoWrapper = document.getElementById('video-wrapper') as HTMLElement;
         const iframe = _videoWrapper?.querySelector('iframe') as HTMLIFrameElement | null;
-        if (!iframe) return;
+        if (!iframe || !_videoWrapper) return;
         const w = _videoWrapper.offsetWidth;
         const h = _videoWrapper.offsetHeight;
         let vidW: number, vidH: number;
@@ -433,12 +291,6 @@ const pageURL = "https://qrhht-landing.vercel.app/";
         iframe.style.border = 'none';
       }
 
-      if (_videoWrapper) {
-        const _videoRo = new ResizeObserver(sizeVideo);
-        _videoRo.observe(_videoWrapper);
-        window.addEventListener('resize', sizeVideo, { passive: true });
-      }
-
       function loadYouTube() {
         if (ytApiLoaded) return;
         ytApiLoaded = true;
@@ -448,6 +300,12 @@ const pageURL = "https://qrhht-landing.vercel.app/";
       }
 
       (window as any).onYouTubeIframeAPIReady = function() {
+        const _videoWrapper = document.getElementById('video-wrapper') as HTMLElement;
+        if (_videoWrapper) {
+          const _videoRo = new ResizeObserver(sizeVideo);
+          _videoRo.observe(_videoWrapper);
+          window.addEventListener('resize', sizeVideo, { passive: true });
+        }
         videoPlayer = new (window as any).YT.Player('video-container', {
           videoId: 'I2CYPa_CxoU',
           playerVars: {
@@ -464,28 +322,41 @@ const pageURL = "https://qrhht-landing.vercel.app/";
         });
       };
 
-      const videoSection = document.getElementById('video-section');
-      if (videoSection) {
-        const videoObserver = new IntersectionObserver(
-          (entries) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) { loadYouTube(); videoObserver.disconnect(); }
-            });
-          },
-          { rootMargin: '200px' }
-        );
-        videoObserver.observe(videoSection);
+      // Wait for React island to hydrate before querying DOM
+      function initVideoObserver() {
+        const videoSection = document.getElementById('video-section');
+        if (videoSection) {
+          const videoObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) { loadYouTube(); videoObserver.disconnect(); }
+              });
+            },
+            { rootMargin: '200px' }
+          );
+          videoObserver.observe(videoSection);
+
+          document.getElementById('video-unmute-btn')?.addEventListener('click', function(this: HTMLButtonElement) {
+            if (!videoPlayer) return;
+            if (videoMuted) {
+              videoPlayer.unMute(); videoPlayer.setVolume(80);
+              this.textContent = '🔊'; videoMuted = false;
+            } else {
+              videoPlayer.mute(); this.textContent = '🔇'; videoMuted = true;
+            }
+          });
+        } else {
+          // video-section not in DOM yet (React island still hydrating) — retry
+          requestAnimationFrame(initVideoObserver);
+        }
       }
 
-      document.getElementById('video-unmute-btn')?.addEventListener('click', function(this: HTMLButtonElement) {
-        if (!videoPlayer) return;
-        if (videoMuted) {
-          videoPlayer.unMute(); videoPlayer.setVolume(80);
-          this.textContent = '🔊'; videoMuted = false;
-        } else {
-          videoPlayer.mute(); this.textContent = '🔇'; videoMuted = true;
-        }
-      });
+      // Start after page load to ensure React island has hydrated
+      if (document.readyState === 'complete') {
+        initVideoObserver();
+      } else {
+        window.addEventListener('load', initVideoObserver, { once: true });
+      }
     </script>
 
     <!-- Anime.js entrance animations: defer until after page load to unblock LCP -->

@@ -86,17 +86,19 @@ export default function QrhhtTestimonials() {
           padding: 0 40px 60px;
           position: relative;
           perspective: 1200px;
+          overflow: hidden;
         }
 
         /* Slide ratio container */
         .testimonials-slider-ratio {
           position: relative;
           padding-bottom: 72%;
+          overflow: hidden;
         }
         .testimonials-slider-ratio .swiper {
           position: absolute;
           inset: 0;
-          overflow: visible;
+          overflow: hidden;
         }
 
         /* Slide base */
