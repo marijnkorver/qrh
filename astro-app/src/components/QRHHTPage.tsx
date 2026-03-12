@@ -314,17 +314,17 @@ export default function QRHHTPage() {
       </section>
 
       {/* ── CLOSING CTA ─────────────────────────────────────────── */}
-      <section style={{ padding: '120px 0', background: '#0f4c75', color: 'white', textAlign: 'center' }}>
+      <section style={{ padding: '120px 0', background: 'linear-gradient(135deg, #ffffff 0%, #f8f6f2 100%)', textAlign: 'center' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 20px' }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,3.5vw,2.8rem)', marginBottom: '2rem', fontWeight: 400, color: '#d4af37' }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,3.5vw,2.8rem)', marginBottom: '2rem', fontWeight: 400, color: '#0f4c75' }}>
             Start your journey today.
           </h2>
-          <p style={{ fontSize: '1.3rem', maxWidth: 700, margin: '0 auto 3rem', lineHeight: 1.8, color: '#e8e8e8', fontFamily: 'Lato, sans-serif' }}>
+          <p style={{ fontSize: '1.3rem', maxWidth: 700, margin: '0 auto 3rem', lineHeight: 1.8, color: '#4a4a4a', fontFamily: 'Lato, sans-serif' }}>
             Whether you're here for yourself or for others, the path starts with one choice — to dive deeper and rise higher.
           </p>
           <div style={{ display: 'flex', gap: 30, justifyContent: 'center', flexWrap: 'wrap' }}>
             {btn('#d4af37', 'Book a Session', openModal)}
-            <Button onClick={openModal} style={{ background: 'rgba(255,255,255,0.15)', color: 'white', padding: '15px 35px', borderRadius: 30, border: '2px solid rgba(255,255,255,0.4)', fontSize: '1.1rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'Lato, sans-serif', backdropFilter: 'blur(10px)' }}>
+            <Button onClick={openModal} style={{ background: 'transparent', color: '#0f4c75', padding: '15px 35px', borderRadius: 30, border: '2px solid #0f4c75', fontSize: '1.1rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'Lato, sans-serif' }}>
               Apply for Training
             </Button>
           </div>

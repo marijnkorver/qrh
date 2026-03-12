@@ -4,9 +4,6 @@ import { Pagination, Autoplay, Navigation, A11y } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-// @ts-ignore
-import EffectCardsStack from '../lib/effect-cards-stack.esm.js';
-import '../lib/effect-cards-stack.css';
 
 const testimonials = [
   {
@@ -43,14 +40,24 @@ export default function QrhhtTestimonials() {
     if (!containerRef.current) return;
 
     swiperRef.current = new Swiper(containerRef.current, {
-      modules: [Pagination, Autoplay, Navigation, A11y, EffectCardsStack],
-      effect: 'cards-stack',
-      loop: false,
-      centeredSlides: true,
+      modules: [Pagination, Autoplay, Navigation, A11y],
+      slidesPerView: 1,
+      spaceBetween: 24,
+      loop: true,
+      centeredSlides: false,
       grabCursor: true,
       speed: 600,
-      cardsStackEffect: {
-        slideShadows: true,
+      breakpoints: {
+        768: {
+          slidesPerView: 2,
+          spaceBetween: 28,
+          centeredSlides: false,
+        },
+        1024: {
+          slidesPerView: 3,
+          spaceBetween: 32,
+          centeredSlides: false,
+        },
       },
       pagination: {
         el: '.testimonials-pagination',
@@ -61,7 +68,7 @@ export default function QrhhtTestimonials() {
         prevEl: '.testimonials-prev',
       },
       autoplay: {
-        delay: 5000,
+        delay: 4500,
         disableOnInteraction: false,
         pauseOnMouseEnter: true,
       },
@@ -81,141 +88,143 @@ export default function QrhhtTestimonials() {
       <style>{`
         .qrhht-testimonials-wrap {
           width: 100%;
-          max-width: 640px;
+          max-width: 1200px;
           margin: 0 auto;
-          padding: 0 40px 60px;
+          padding: 0 16px 60px;
           position: relative;
-          perspective: 1200px;
-          overflow: hidden;
         }
 
-        /* Slide ratio container */
-        .testimonials-slider-ratio {
-          position: relative;
-          padding-bottom: 72%;
+        /* Swiper container */
+        .testimonials-swiper {
           overflow: hidden;
-        }
-        .testimonials-slider-ratio .swiper {
-          position: absolute;
-          inset: 0;
-          overflow: hidden;
+          padding-bottom: 56px !important;
         }
 
-        /* Slide base */
-        .testimonials-slider-ratio .swiper-slide {
-          border-radius: 20px;
+        /* Slide */
+        .testimonials-swiper .swiper-slide {
+          height: auto;
+        }
+
+        /* Card */
+        .testimonial-card {
           height: 100%;
-        }
-
-        /* Front face */
-        .testimonial-front {
-          position: absolute;
-          inset: 0;
+          min-height: 320px;
           border-radius: 20px;
-          background: linear-gradient(145deg, #0f4c75 0%, #0a2d47 100%);
+          background: linear-gradient(145deg, #ffffff 0%, #f8f9fb 60%, #f1f3f7 100%);
+          border: 1px solid rgba(212, 175, 55, 0.18);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+          padding: 36px 28px 32px;
           display: flex;
           flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 36px 32px;
-          box-shadow: 0 24px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(212,175,55,0.15), 0 0 30px rgba(212,175,55,0.2), 0 0 60px rgba(15,76,117,0.3);
-          text-align: center;
-          transform-style: preserve-3d;
-          backface-visibility: hidden;
-          animation: testimonialGlow 6s ease-in-out infinite;
-        }
-        @keyframes testimonialGlow {
-          0%, 100% { box-shadow: 0 24px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(212,175,55,0.15), 0 0 20px rgba(212,175,55,0.15), 0 0 40px rgba(15,76,117,0.2); }
-          50% { box-shadow: 0 24px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(212,175,55,0.3), 0 0 40px rgba(212,175,55,0.35), 0 0 80px rgba(15,76,117,0.4); }
+          align-items: flex-start;
+          text-align: left;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          cursor: default;
+          position: relative;
+          overflow: hidden;
         }
 
-        /* Gold accent bar */
-        .testimonial-front::before {
+        /* Gold top accent bar */
+        .testimonial-card::before {
           content: '';
           position: absolute;
-          top: 0; left: 10%; right: 10%;
+          top: 0; left: 12%; right: 12%;
           height: 3px;
           background: linear-gradient(90deg, transparent, #d4af37, transparent);
           border-radius: 0 0 3px 3px;
         }
 
+        .testimonial-card:hover {
+          transform: translateY(-4px) scale(1.015);
+          box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(212, 175, 55, 0.25);
+        }
+
         /* Quote mark */
         .testimonial-quote-mark {
           color: #d4af37;
-          font-size: 4.5rem;
-          line-height: 1;
+          font-size: 4rem;
+          line-height: 0.8;
           font-family: Georgia, serif;
-          margin-bottom: 12px;
-          opacity: 0.85;
+          margin-bottom: 16px;
+          opacity: 0.75;
           user-select: none;
         }
 
+        /* Text */
         .testimonial-text {
-          font-size: 1.08rem;
-          color: #e8f4fd;
-          line-height: 1.8;
+          font-size: 1rem;
+          color: #374151;
+          line-height: 1.75;
           font-style: italic;
           margin-bottom: 24px;
           flex: 1;
         }
 
+        /* Divider */
         .testimonial-divider {
-          width: 40px;
+          width: 36px;
           height: 2px;
           background: linear-gradient(90deg, #d4af37, #c9973c);
           border-radius: 2px;
-          margin-bottom: 18px;
+          margin-bottom: 20px;
         }
 
-        .testimonial-avatar {
-          width: 72px;
-          height: 72px;
-          border-radius: 50%;
-          object-fit: cover;
-          border: 3px solid #d4af37;
-          box-shadow: 0 4px 16px rgba(212,175,55,0.3);
-          margin-bottom: 12px;
-        }
-
-        .testimonial-author {
-          font-size: 1.05rem;
-          font-weight: 700;
-          color: #d4af37;
-          letter-spacing: 0.03em;
-          margin-bottom: 4px;
-        }
-
-        .testimonial-role {
-          font-size: 0.82rem;
-          color: #8ab4ce;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-        }
-
-        /* Back face — decorative */
-        .testimonial-back {
-          position: absolute;
-          inset: 0;
-          border-radius: 20px;
-          background: linear-gradient(145deg, #d4af37 0%, #a07d20 100%);
+        /* Author row */
+        .testimonial-author-row {
           display: flex;
           align-items: center;
-          justify-content: center;
-          transform-style: preserve-3d;
-          backface-visibility: hidden;
-          pointer-events: none;
+          gap: 14px;
+          width: 100%;
         }
-        .testimonial-back-logo {
-          width: 80px;
-          height: 80px;
-          object-fit: contain;
-          opacity: 0.6;
+
+        /* Avatar */
+        .testimonial-avatar {
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 2px solid #d4af37;
+          box-shadow: 0 2px 10px rgba(212, 175, 55, 0.25);
+          flex-shrink: 0;
+        }
+        .testimonial-avatar-fallback {
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #d4af37 0%, #c9973c 100%);
+          display: grid;
+          place-content: center;
+          color: #fff;
+          font-weight: 700;
+          font-size: 1.1rem;
+          border: 2px solid #d4af37;
+          flex-shrink: 0;
+        }
+
+        .testimonial-author-info {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+
+        .testimonial-author-name {
+          font-size: 1rem;
+          font-weight: 700;
+          color: #111827;
+          line-height: 1.2;
+        }
+
+        .testimonial-author-role {
+          font-size: 0.78rem;
+          color: #6b7280;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
         }
 
         /* Pagination */
         .testimonials-pagination {
           position: absolute;
-          bottom: 16px;
+          bottom: 20px;
           left: 0;
           right: 0;
           display: flex;
@@ -224,9 +233,9 @@ export default function QrhhtTestimonials() {
           z-index: 10;
         }
         .testimonials-pagination .swiper-pagination-bullet {
-          width: 10px;
-          height: 10px;
-          background: rgba(212,175,55,0.3);
+          width: 9px;
+          height: 9px;
+          background: rgba(212, 175, 55, 0.3);
           border-radius: 50%;
           cursor: pointer;
           transition: background 0.3s, transform 0.3s;
@@ -234,106 +243,112 @@ export default function QrhhtTestimonials() {
         }
         .testimonials-pagination .swiper-pagination-bullet-active {
           background: #d4af37;
-          transform: scale(1.3);
+          transform: scale(1.35);
         }
 
-        /* Navigation arrows */
+        /* Nav arrows */
         .testimonials-prev,
         .testimonials-next {
           position: absolute;
-          top: calc(50% - 50px);
+          top: 50%;
+          transform: translateY(-50%);
           z-index: 10;
-          width: 42px;
-          height: 42px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
-          background: rgba(15,76,117,0.9);
-          border: 1px solid rgba(212,175,55,0.4);
+          background: #ffffff;
+          border: 1.5px solid rgba(212, 175, 55, 0.4);
           color: #d4af37;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
           transition: all 0.25s ease;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
         }
         .testimonials-prev:hover,
         .testimonials-next:hover {
-          background: #0f4c75;
+          background: #d4af37;
           border-color: #d4af37;
-          transform: scale(1.08);
+          color: #ffffff;
+          transform: translateY(-50%) scale(1.08);
+          box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
         }
         .testimonials-prev {
-          left: 0;
+          left: -16px;
         }
         .testimonials-next {
-          right: 0;
+          right: -16px;
         }
         .testimonials-prev svg,
         .testimonials-next svg {
-          width: 18px;
-          height: 18px;
+          width: 16px;
+          height: 16px;
           stroke: currentColor;
           stroke-width: 2.5;
           fill: none;
         }
 
         /* Mobile */
-        @media (max-width: 520px) {
+        @media (max-width: 640px) {
           .qrhht-testimonials-wrap {
-            padding: 0 32px 52px;
+            padding: 0 8px 60px;
           }
-          .testimonials-slider-ratio {
-            padding-bottom: 90%;
+          .testimonials-prev { left: -8px; }
+          .testimonials-next { right: -8px; }
+          .testimonial-card {
+            min-height: 280px;
+            padding: 28px 22px 26px;
           }
           .testimonial-text {
             font-size: 0.95rem;
           }
-          .testimonials-prev { left: -4px; }
-          .testimonials-next { right: -4px; }
+        }
+
+        /* Tablet */
+        @media (min-width: 641px) and (max-width: 1023px) {
+          .qrhht-testimonials-wrap {
+            padding: 0 24px 60px;
+          }
+          .testimonials-prev { left: -12px; }
+          .testimonials-next { right: -12px; }
+        }
+
+        /* Desktop */
+        @media (min-width: 1024px) {
+          .qrhht-testimonials-wrap {
+            padding: 0 40px 60px;
+          }
+          .testimonials-prev { left: -20px; }
+          .testimonials-next { right: -20px; }
         }
       `}</style>
 
-      <div className="testimonials-slider-ratio">
-        {/* Swiper container */}
-        <div className="swiper swiper-cards-stack" ref={containerRef}>
-          <div className="swiper-wrapper">
-            {testimonials.map((t) => (
-              <div className="swiper-slide" key={t.author}>
-                {/* Back side */}
-                <div className="cards-stack-back testimonial-back">
-                  <img
-                    src="/images/logo.webp"
-                    alt="QRHHT Logo"
-                    className="testimonial-back-logo"
-                    loading="lazy"
-                    decoding="async"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                </div>
-                {/* Front side */}
-                <div className="cards-stack-front testimonial-front">
-                  <div className="testimonial-quote-mark">"</div>
-                  <p className="testimonial-text">{t.text}</p>
-                  <div className="testimonial-divider" />
-                  <img
-                    src={t.image}
-                    alt={t.author}
-                    className="testimonial-avatar"
-                    loading="lazy"
-                    decoding="async"
-                    onError={(e) => {
-                      const img = e.target as HTMLImageElement;
-                      img.style.display = 'none';
-                    }}
-                  />
-                  <p className="testimonial-author">{t.author}</p>
-                  <p className="testimonial-role">{t.role}</p>
+      <div className="testimonials-swiper swiper" ref={containerRef}>
+        <div className="swiper-wrapper">
+          {testimonials.map((t) => (
+            <div className="swiper-slide" key={t.author}>
+              <div className="testimonial-card">
+                {/* Quote mark */}
+                <div className="testimonial-quote-mark">"</div>
+
+                {/* Text */}
+                <p className="testimonial-text">{t.text}</p>
+
+                {/* Divider */}
+                <div className="testimonial-divider" />
+
+                {/* Author */}
+                <div className="testimonial-author-row">
+                  <AvatarWithFallback src={t.image} alt={t.author} />
+                  <div className="testimonial-author-info">
+                    <span className="testimonial-author-name">{t.author}</span>
+                    <span className="testimonial-author-role">{t.role}</span>
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -352,5 +367,27 @@ export default function QrhhtTestimonials() {
         </svg>
       </button>
     </div>
+  );
+}
+
+/* Avatar with fallback initial */
+function AvatarWithFallback({ src, alt }: { src: string; alt: string }) {
+  const initial = alt.charAt(0).toUpperCase();
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className="testimonial-avatar"
+      loading="lazy"
+      decoding="async"
+      onError={(e) => {
+        const img = e.target as HTMLImageElement;
+        // Replace with a div showing initial — create adjacent element
+        const fallback = document.createElement('div');
+        fallback.className = 'testimonial-avatar-fallback';
+        fallback.textContent = initial;
+        img.parentNode?.replaceChild(fallback, img);
+      }}
+    />
   );
 }

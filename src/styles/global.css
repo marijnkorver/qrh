@@ -670,7 +670,7 @@ footer {
   max-width: none; /* Allow full-bleed sizing via JS */
   overflow: hidden;
 }
-.closing-cta { background: #0f4c75 !important; }
+.closing-cta { background: #ffffff !important; }
 
 /* Global page background — white base */
 body {
