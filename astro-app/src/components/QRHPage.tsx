@@ -60,7 +60,7 @@ const TRAINING_CARDS = [
   { icon: 'C', title: 'Certification', desc: 'Certificate of completion acknowledging your training and expertise' },
 ];
 
-export default function QRHHTPage() {
+export default function QRHPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [slide, setSlide] = useState(0);
@@ -103,7 +103,7 @@ export default function QRHHTPage() {
           <NavbarLogo
             href="#hero"
             imageSrc="/images/68c3766f4bcc514d1a458be7.png"
-            imageAlt="QRHHT"
+            imageAlt="QRH"
             imageHeight={50}
             LinkComponent={({ href, children, ...r }: any) => <a href={href} onClick={scrollTo(href as string)} {...r}>{children}</a>}
           />
@@ -119,7 +119,7 @@ export default function QRHHTPage() {
         </NavBody>
         <MobileNav>
           <MobileNavHeader>
-            <NavbarLogo href="#hero" imageSrc="/images/68c3766f4bcc514d1a458be7.png" imageAlt="QRHHT" imageHeight={40}
+            <NavbarLogo href="#hero" imageSrc="/images/68c3766f4bcc514d1a458be7.png" imageAlt="QRH" imageHeight={40}
               LinkComponent={({ href, children, ...r }: any) => <a href={href} onClick={scrollTo(href as string)} {...r}>{children}</a>}
             />
             <MobileNavToggle isOpen={mobileOpen} onClick={() => setMobileOpen(!mobileOpen)} />
@@ -165,7 +165,7 @@ export default function QRHHTPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px,1fr))', gap: 80, alignItems: 'center' }}>
             <FadeIn>
               <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem,3.5vw,2.8rem)', color: '#0f4c75', marginBottom: '2rem', fontWeight: 400 }}>
-                What makes QRHHT different?
+                What makes QRH different?
               </h2>
               <p style={{ fontSize: '1.3rem', color: '#2c3e50', lineHeight: 1.8, marginBottom: '1.5rem', fontFamily: 'Lato, sans-serif' }}>
                 We guide you beyond what you thought was possible — whether through personal sessions or practitioner training.
@@ -187,7 +187,7 @@ export default function QRHHTPage() {
               Your Pathways
             </h2>
             <p style={{ textAlign: 'center', fontSize: '1.3rem', color: '#5a6c7d', marginBottom: '4rem', maxWidth: 700, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.7, fontFamily: 'Lato, sans-serif' }}>
-              Whether you're here for your own healing or to help others heal, QRHHT offers an experience that transforms.
+              Whether you're here for your own healing or to help others heal, QRH offers an experience that transforms.
             </p>
           </FadeIn>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 40 }}>
@@ -356,7 +356,7 @@ export default function QRHHTPage() {
             </a>
           </div>
           <p style={{ color: '#95a5a6', fontSize: '0.9rem', fontFamily: 'Lato, sans-serif' }}>
-            © 2025 QRHHT. All rights reserved.
+            © 2025 QRH. All rights reserved.
           </p>
         </div>
       </footer>

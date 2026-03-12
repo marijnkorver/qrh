@@ -30,7 +30,7 @@ export default function QrhhtFooter() {
         }}>
           {/* Logo */}
           <a href="#hero" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <img src="/images/logo.webp" alt="QRHHT" style={{ height: '40px', width: 'auto' }} loading="lazy" decoding="async" />
+            <img src="/images/logo.webp" alt="QRH" style={{ height: '40px', width: 'auto' }} loading="lazy" decoding="async" />
           </a>
 
           {/* Social */}
@@ -81,7 +81,7 @@ export default function QrhhtFooter() {
 
         {/* Copyright */}
         <p style={{ textAlign: 'center', color: '#607d8b', fontSize: '0.85rem', margin: 0 }}>
-          © {new Date().getFullYear()} QRHHT. All rights reserved.
+          © {new Date().getFullYear()} QRH. All rights reserved.
         </p>
       </div>
     </footer>

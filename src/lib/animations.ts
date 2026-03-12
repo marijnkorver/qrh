@@ -2,7 +2,7 @@ import { animate } from 'animejs'
 import { MOTION } from './motion'
 
 /**
- * QRHHT scroll animations (anime.js v4)
+ * QRH scroll animations (anime.js v4)
  * Sticky scroll is now handled by CSS (position: sticky) + Framer Motion (hero).
  * Plasma: CSS-only pulse animation.
  */

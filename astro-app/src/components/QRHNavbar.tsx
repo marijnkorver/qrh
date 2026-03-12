@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-export default function QRHHTNavbar() {
+export default function QRHNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -52,7 +52,7 @@ export default function QRHHTNavbar() {
           <a href="#hero" onClick={scrollTo('#hero')} style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
             <img
               src="/images/68c3766f4bcc514d1a458be7.png"
-              alt="QRHHT"
+              alt="QRH"
               style={{ height: scrolled ? 40 : 50, width: 'auto', transition: 'height 0.3s ease' }}
             />
           </a>
