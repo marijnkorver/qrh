@@ -1,0 +1,121 @@
+---
+interface Props {
+  showBooking?: boolean;
+  showTraining?: boolean;
+  bookingLabel?: string;
+  trainingLabel?: string;
+  closingStyle?: boolean;
+  className?: string;
+}
+
+const {
+  showBooking = true,
+  showTraining = true,
+  bookingLabel = 'Book A Session',
+  trainingLabel = 'Train With Me',
+  closingStyle = false,
+  className = '',
+} = Astro.props;
+
+const BOOKING_URL = 'https://calendar.app.google/kH6P8dqxAzCNzVYg8';
+const CALENDLY_URL = 'https://calendly.com/marayan/academy-game-plan';
+---
+
+<div class={`cta-buttons-group ${closingStyle ? 'closing-style' : ''} ${className}`} role="group" aria-label="Call to action">
+  {showBooking && (
+    <button
+      class="cta-btn btn-gold"
+      data-modal-url={BOOKING_URL}
+      aria-label={bookingLabel}
+    >
+      {bookingLabel}
+    </button>
+  )}
+  {showTraining && (
+    <button
+      class="cta-btn btn-navy"
+      data-modal-url={CALENDLY_URL}
+      aria-label={trainingLabel}
+    >
+      {trainingLabel}
+    </button>
+  )}
+</div>
+
+<style>
+  .cta-buttons-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .closing-style {
+    justify-content: center;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 32px;
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    min-height: 50px;
+    white-space: nowrap;
+  }
+
+  .btn-gold {
+    background: #d4af37;
+    color: white;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  }
+  .btn-gold:hover {
+    background: #f4c842;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.45);
+  }
+
+  .btn-navy {
+    background: #0f4c75;
+    color: white;
+    box-shadow: 0 4px 15px rgba(15, 76, 117, 0.3);
+  }
+  .btn-navy:hover {
+    background: #1a5d8a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(15, 76, 117, 0.45);
+  }
+
+  @media (max-width: 768px) {
+    .cta-buttons-group {
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+    }
+    .cta-btn {
+      width: 80%;
+      max-width: 280px;
+      min-height: 52px;
+    }
+  }
+</style>
+
+<script>
+  // All CTA buttons dispatch the modal event
+  document.querySelectorAll('.cta-btn[data-modal-url]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const url = (btn as HTMLElement).dataset.modalUrl ?? '';
+      if (url) {
+        window.dispatchEvent(new CustomEvent('qrhht-open-modal', { detail: { url } }));
+      }
+    });
+  });
+</script>

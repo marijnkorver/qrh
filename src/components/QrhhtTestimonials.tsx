@@ -96,16 +96,19 @@ export default function QrhhtTestimonials() {
 
         /* Swiper container */
         .testimonials-swiper {
-          overflow: hidden;
+          overflow: visible;
           padding-bottom: 56px !important;
         }
 
-        /* Slide */
+        /* Slide - always mounted, min-height for stability */
         .testimonials-swiper .swiper-slide {
           height: auto;
+          min-height: 320px;
+          visibility: visible !important;
+          opacity: 1 !important;
         }
 
-        /* Card */
+        /* Card - always mounted, no overflow clipping */
         .testimonial-card {
           height: 100%;
           min-height: 320px;
@@ -121,7 +124,7 @@ export default function QrhhtTestimonials() {
           transition: transform 0.3s ease, box-shadow 0.3s ease;
           cursor: default;
           position: relative;
-          overflow: hidden;
+          overflow: visible;
         }
 
         /* Gold top accent bar */
@@ -370,7 +373,7 @@ export default function QrhhtTestimonials() {
   );
 }
 
-/* Avatar with fallback initial */
+/* Avatar with fallback initial - always mounted, eager loading */
 function AvatarWithFallback({ src, alt }: { src: string; alt: string }) {
   const initial = alt.charAt(0).toUpperCase();
   return (
@@ -378,11 +381,11 @@ function AvatarWithFallback({ src, alt }: { src: string; alt: string }) {
       src={src}
       alt={alt}
       className="testimonial-avatar"
-      loading="lazy"
-      decoding="async"
+      loading="eager"
+      decoding="sync"
       onError={(e) => {
         const img = e.target as HTMLImageElement;
-        // Replace with a div showing initial — create adjacent element
+        // Replace with div showing initial — keep mounted
         const fallback = document.createElement('div');
         fallback.className = 'testimonial-avatar-fallback';
         fallback.textContent = initial;

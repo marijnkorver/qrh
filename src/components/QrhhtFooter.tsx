@@ -1,3 +1,4 @@
+// v2: animated GIF logo
 import { Instagram } from 'lucide-react'
 import 'liquidcn/styles.css'
 
@@ -30,7 +31,7 @@ export default function QrhhtFooter() {
         }}>
           {/* Logo */}
           <a href="#hero" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <img src="/images/logo.webp" alt="QRH" style={{ height: '40px', width: 'auto' }} loading="lazy" decoding="async" />
+            <img src="/images/logo.gif" alt="QRH" className="rounded-full" style={{ height: '70px', width: 'auto', transition: 'transform 0.3s ease' }} loading="lazy" decoding="async" onMouseOver={(e) => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.1)' }} onMouseOut={(e) => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1)' }} />
           </a>
 
           {/* Social */}

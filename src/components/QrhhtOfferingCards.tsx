@@ -14,6 +14,9 @@ const cardStyle: React.CSSProperties = {
   width: '100%',
   boxSizing: 'border-box',
   minWidth: 0, /* prevent grid cell blowout */
+  minHeight: '400px', /* ensure stable height on mobile */
+  display: 'flex',
+  flexDirection: 'column',
 }
 
 export default function QrhhtOfferingCards() {

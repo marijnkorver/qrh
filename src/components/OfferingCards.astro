@@ -1,0 +1,189 @@
+---
+const BOOKING_URL = 'https://calendar.app.google/kH6P8dqxAzCNzVYg8';
+const CALENDLY_URL = 'https://calendly.com/marayan/academy-game-plan';
+---
+
+<div class="offerings-grid" id="offerings-grid">
+
+  <!-- Therapy Card -->
+  <div class="offering-card aura-effect" id="therapy">
+    <div class="offering-card-inner">
+      <h3 class="offering-title">Therapy Sessions</h3>
+      <p class="offering-desc">
+        Personal one-on-one work to awaken your potential. These sessions take you to the root of your psyche and beyond &mdash; not for temporary relief, but for lasting transformation.
+      </p>
+      <button
+        class="offering-btn btn-gold"
+        data-modal-url={BOOKING_URL}
+        aria-label="Book a therapy session"
+      >
+        Book A Session
+      </button>
+    </div>
+  </div>
+
+  <!-- Training Card -->
+  <div class="offering-card aura-effect" id="training-offering">
+    <div class="offering-card-inner">
+      <h3 class="offering-title">Practitioner Training</h3>
+      <p class="offering-desc">
+        A 6-month journey to master a unique hypnosis method and launch your practice. Learn to guide others with confidence and embody the work you share.
+      </p>
+      <button
+        class="offering-btn btn-navy"
+        data-modal-url={CALENDLY_URL}
+        aria-label="Apply to practitioner training"
+      >
+        Train With Me
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .offerings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .offering-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.09);
+    border: 2px solid transparent;
+    text-align: center;
+    transition: border-color 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
+    overflow: visible;
+    cursor: default;
+    opacity: 1;
+    transform: none;
+  }
+
+  .offering-card-inner {
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .offering-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: #0f4c75;
+    margin: 0 0 1.5rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .offering-desc {
+    font-family: 'Lato', sans-serif;
+    font-size: 1.1rem;
+    color: #5a6c7d;
+    line-height: 1.75;
+    margin: 0 0 2rem;
+    flex: 1;
+  }
+
+  .offering-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 30px;
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    min-height: 48px;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-gold {
+    background: #d4af37;
+    color: white;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  }
+  .btn-gold:hover {
+    background: #f4c842;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.45);
+  }
+
+  .btn-navy {
+    background: #0f4c75;
+    color: white;
+    box-shadow: 0 4px 15px rgba(15, 76, 117, 0.3);
+  }
+  .btn-navy:hover {
+    background: #1a5d8a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(15, 76, 117, 0.45);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .offerings-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .offering-card-inner {
+      padding: 28px 22px;
+    }
+
+    .offering-title {
+      font-size: 1.6rem;
+    }
+
+    .offering-desc {
+      font-size: 1rem;
+    }
+
+    .offering-btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  // CSS hover effects + modal dispatch (no GSAP dependency)
+  function initOfferingCardEffects() {
+    const cards = document.querySelectorAll('.offering-card');
+    cards.forEach(card => {
+      const el = card as HTMLElement;
+      el.addEventListener('mouseenter', () => {
+        el.style.transform = 'translateY(-10px)';
+        el.style.borderColor = '#d4af37';
+        el.style.boxShadow = '0 25px 50px rgba(212,175,55,0.2)';
+      });
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = 'none';
+        el.style.borderColor = 'transparent';
+        el.style.boxShadow = '0 15px 35px rgba(0,0,0,0.09)';
+      });
+    });
+
+    // Button → modal dispatch
+    document.querySelectorAll('.offering-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const url = (btn as HTMLElement).dataset.modalUrl ?? '';
+        if (url) {
+          window.dispatchEvent(new CustomEvent('qrhht-open-modal', { detail: { url } }));
+        }
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initOfferingCardEffects, { once: true });
+  } else {
+    initOfferingCardEffects();
+  }
+</script>

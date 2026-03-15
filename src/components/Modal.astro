@@ -1,0 +1,289 @@
+---
+---
+
+<!-- Global modal singleton — always in DOM, CSS controls visibility -->
+<div
+  id="qrh-modal-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Booking"
+  aria-hidden="true"
+  class="modal-overlay"
+>
+  <div id="qrh-modal-box" class="modal-box">
+    <!-- Header -->
+    <div class="modal-header">
+      <button
+        id="qrh-modal-close"
+        class="modal-close-btn"
+        aria-label="Close booking dialog"
+      >&times;</button>
+    </div>
+
+    <!-- Google Calendar: redirect UI (iframe blocked) -->
+    <div id="modal-gcal-ui" class="modal-gcal-ui" style="display: none;">
+      <div class="modal-gcal-icon" aria-hidden="true">📅</div>
+      <div class="modal-gcal-content">
+        <h2 class="modal-gcal-title">Book a Session</h2>
+        <p class="modal-gcal-desc">
+          Google Calendar will open in a new tab so you can pick your preferred time slot.
+        </p>
+      </div>
+      <button id="modal-gcal-open" class="modal-gcal-btn">
+        Open Calendar &rarr;
+      </button>
+    </div>
+
+    <!-- Iframe for embeddable URLs (e.g. Calendly) -->
+    <iframe
+      id="modal-iframe"
+      src="about:blank"
+      class="modal-iframe"
+      allow="camera; microphone; fullscreen"
+      title="Booking"
+      style="display: none;"
+    ></iframe>
+  </div>
+</div>
+
+<style>
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .modal-box {
+    background: white;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    transform: scale(0.95) translateY(20px);
+    transition: transform 0.25s ease;
+  }
+
+  .modal-overlay.open .modal-box {
+    transform: scale(1) translateY(0);
+  }
+
+  /* Large iframe mode */
+  .modal-box.iframe-mode {
+    max-width: 800px;
+    height: 90vh;
+    max-height: 700px;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+  }
+
+  .modal-close-btn {
+    background: none;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .modal-close-btn:hover {
+    background: #0f4c75;
+    border-color: #0f4c75;
+    color: white;
+  }
+
+  /* Google Cal UI */
+  .modal-gcal-ui {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 32px 48px;
+    gap: 24px;
+    text-align: center;
+  }
+
+  .modal-gcal-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #d4af37 0%, #f4c842 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35);
+    flex-shrink: 0;
+  }
+
+  .modal-gcal-content {
+    max-width: 340px;
+  }
+
+  .modal-gcal-title {
+    font-family: 'Playfair Display', serif;
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 600;
+    color: #111;
+    letter-spacing: -0.3px;
+  }
+
+  .modal-gcal-desc {
+    font-family: 'Lato', sans-serif;
+    margin: 0;
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  .modal-gcal-btn {
+    background: linear-gradient(135deg, #d4af37 0%, #f4c842 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 32px;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    letter-spacing: 0.3px;
+  }
+
+  .modal-gcal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(212, 175, 55, 0.5);
+  }
+
+  /* Iframe */
+  .modal-iframe {
+    flex: 1;
+    width: 100%;
+    border: none;
+    display: block;
+    min-height: 400px;
+  }
+
+  @media (max-width: 480px) {
+    .modal-box {
+      border-radius: 16px;
+    }
+    .modal-gcal-ui {
+      padding: 30px 20px 36px;
+    }
+  }
+</style>
+
+<script>
+  const overlay  = document.getElementById('qrh-modal-overlay');
+  const box      = document.getElementById('qrh-modal-box');
+  const closeBtn = document.getElementById('qrh-modal-close');
+  const gcalUi   = document.getElementById('modal-gcal-ui');
+  const gcalOpen = document.getElementById('modal-gcal-open');
+  const iframe   = document.getElementById('modal-iframe') as HTMLIFrameElement | null;
+
+  let currentUrl = '';
+
+  function isGoogleCal(url: string) {
+    return url.includes('calendar.app.google') || url.includes('calendar.google.com');
+  }
+
+  function openModal(url: string) {
+    currentUrl = url;
+    const gcal = isGoogleCal(url);
+
+    if (box) {
+      if (gcal) {
+        box.classList.remove('iframe-mode');
+      } else {
+        box.classList.add('iframe-mode');
+      }
+    }
+
+    if (gcalUi) gcalUi.style.display = gcal ? 'flex' : 'none';
+    if (iframe) {
+      iframe.style.display = gcal ? 'none' : 'block';
+      iframe.src = gcal ? 'about:blank' : url;
+    }
+
+    overlay?.classList.add('open');
+    overlay?.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    overlay?.classList.remove('open');
+    overlay?.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    // Delay src clear until after transition
+    setTimeout(() => {
+      if (iframe) iframe.src = 'about:blank';
+      currentUrl = '';
+    }, 300);
+  }
+
+  // Open on custom event
+  window.addEventListener('qrhht-open-modal', (e: Event) => {
+    const url = (e as CustomEvent).detail?.url;
+    if (url) openModal(url);
+  });
+
+  // Close button
+  closeBtn?.addEventListener('click', closeModal);
+
+  // Click overlay to close
+  overlay?.addEventListener('click', (e) => {
+    if (e.target === overlay) closeModal();
+  });
+
+  // Escape key
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay?.classList.contains('open')) {
+      closeModal();
+    }
+  });
+
+  // Google Cal open button
+  gcalOpen?.addEventListener('click', () => {
+    if (currentUrl) {
+      window.open(currentUrl, '_blank', 'noopener,noreferrer');
+    }
+    closeModal();
+  });
+</script>

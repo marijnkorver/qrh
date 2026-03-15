@@ -1,52 +1,16 @@
-@import "tailwindcss";
-@import "liquidcn/styles.css";
-@import "lenis/dist/lenis.css";
-
-/* Scan LiquidCN node_modules for Tailwind classes */
-@source "../../node_modules/liquidcn";
-
 /* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; }
+
 html, body {
   margin: 0;
   padding: 0;
-  /* CRITICAL: overflow-x: clip (not hidden) — "hidden" on html creates a scroll container
-     that breaks position:sticky. "clip" prevents overflow without creating a scroll container. */
   overflow-x: clip;
   width: 100%;
   max-width: 100vw;
 }
 
-/* Lenis root mode needs html/body to scroll freely */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-/* Prevent Lenis from hiding overflow when stopped (would break sticky) */
-html.lenis.lenis-stopped {
-  overflow: clip;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-/* ── LiquidCN CSS Variable Theming ── */
-/* gold #d4af37 → oklch ≈ 76% chroma 0.135 hue 87 */
+/* ── QRH Brand Colors ── */
 :root {
-  --primary: oklch(76% 0.135 87);
-  --primary-foreground: oklch(100% 0 0);
-  --secondary: oklch(30% 0.06 240);
-  --secondary-foreground: oklch(100% 0 0);
-  --foreground: oklch(20% 0.03 250);
-  --background: oklch(100% 0 0);
-  --card: oklch(100% 0 0);
-  --card-foreground: oklch(20% 0.03 250);
-  --muted: oklch(95% 0.01 250);
-  --muted-foreground: oklch(55% 0.03 250);
-  --border: oklch(85% 0.02 250);
-
-  /* ── QRH Brand Colors ── */
   --qrhht-gold: #d4af37;
   --qrhht-gold-bright: #f4c842;
   --qrhht-navy: #0a1a2e;
@@ -54,798 +18,161 @@ html.lenis.lenis-stopped {
   --qrhht-teal: #20b2aa;
   --qrhht-text: #2c3e50;
   --qrhht-text-muted: #5a6c7d;
-  --qrhht-section-bg: #ffffff;
 }
 
-/* ── Sticky scroll-stack: sections pin at top and stack on each other ── */
-/* Lenis handles smooth scroll natively — no JS translateY needed */
-/* CRITICAL: z-index stacking makes each section layer over the previous */
-/* CRITICAL: height: 100vh + overflow: hidden required for sections to layer */
-.stack-section {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow: hidden;
-  opacity: 1;
-  visibility: visible;
-}
-
-/* nth-child z-index stacking — ensures sections stack correctly in DOM order */
-/* These are CSS fallbacks; inline z-index on each section takes precedence */
-.stack-section:nth-child(1) { z-index: 10; }
-.stack-section:nth-child(2) { z-index: 20; }
-.stack-section:nth-child(3) { z-index: 30; }
-.stack-section:nth-child(4) { z-index: 40; }
-.stack-section:nth-child(5) { z-index: 50; }
-.stack-section:nth-child(6) { z-index: 60; }
-.stack-section:nth-child(7) { z-index: 70; }
-.stack-section:nth-child(8) { z-index: 80; }
-
-/* tall sections (not sticky) also need z-index for layering context */
-.stack-section-tall {
-  position: relative;
-}
-.stack-section-tall:nth-child(5) { z-index: 50; }
-.stack-section-tall:nth-child(6) { z-index: 60; }
-.stack-section-tall:nth-child(7) { z-index: 70; }
-.stack-section-tall:nth-child(8) { z-index: 80; }
-
-/* ── Tall sections: flow naturally (not sticky) so all content is reachable ── */
-/* Applied to sections that have more content than a single viewport */
-.stack-section-tall {
-  top: auto;
+/* ── Lenis: let html/body scroll freely ── */
+html.lenis,
+html.lenis body {
   height: auto;
-  overflow: visible;
+}
+
+html.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* ── Images: safe defaults ── */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── Scroll padding for fixed nav ── */
+html {
+  scroll-padding-top: 70px;
+}
+
+/* ──────────────────────────────────────────────────────
+   ANIMATION UTILITIES
+   All content is VISIBLE by default.
+   Classes are enhanced progressively by JS.
+────────────────────────────────────────────────────── */
+
+/* ── Section reveals: fade-in + slide-up ── */
+.reveal-on-scroll {
   opacity: 1;
-  visibility: visible;
+  transform: none;
+  transition: none;
 }
 
-/* ── Fix LiquidCN Navbar top spacing ── */
-/* Navbar component defaults to sticky top-4; force fixed top-0 */
-.sticky.inset-x-0.top-4 {
-  top: 0 !important;
-  position: fixed !important;
-}
-/* Motion div wrapper that LiquidCN animates — ensure no gap */
-nav.sticky,
-nav[class*="top-4"] {
-  top: 0 !important;
-  position: fixed !important;
+/* JS adds .js-animations class to <body> when animations are ready */
+body.js-animations .reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
 }
 
-/* ── Footer: sticky emergence animation ── */
-/* Footer sits above all sticky stack sections, slides up into view */
-footer {
+body.js-animations .reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delay variants */
+body.js-animations .reveal-on-scroll[data-reveal-delay="1"] { transition-delay: 0.1s; }
+body.js-animations .reveal-on-scroll[data-reveal-delay="2"] { transition-delay: 0.2s; }
+body.js-animations .reveal-on-scroll[data-reveal-delay="3"] { transition-delay: 0.3s; }
+body.js-animations .reveal-on-scroll[data-reveal-delay="4"] { transition-delay: 0.4s; }
+
+/* ── Typewriter cursor ── */
+.tw-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: currentColor;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: tw-blink 0.8s step-end infinite;
+  opacity: 1;
+}
+
+@keyframes tw-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── Hero CSS typewriter (no-JS fallback for heading) ──
+   The hero-title uses CSS animation, not JS, so it always works.
+   The heading text starts visible (opacity animation).
+   We do NOT use CSS typewriter width trick (breaks responsive layouts).
+   Instead: JS typewriter is applied by initTypewriters() after load.
+── */
+
+/* ── Training card stack ── */
+.training-stack-outer {
   position: relative;
-  z-index: 999;
-  animation: footerSlideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-timeline: view();
-  animation-range: entry 0% entry 30%;
 }
 
-@keyframes footerSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Fallback for browsers without scroll-driven animations */
-@supports not (animation-timeline: view()) {
-  footer {
-    animation: footerFadeIn 1.2s ease-out both;
-  }
-  @keyframes footerFadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
-}
-
-/* ── Hero content padding ── */
-.hero-content {
-  padding: 80px 20px !important;
-}
-
-/* ── Video wrapper: full-bleed, no padding, pure video ── */
-#video-wrapper {
-  padding: 0;
-}
-
-/* ════════════════════════════════════════════════
-   MOBILE RESPONSIVE FIXES (≤ 768px)
-   ════════════════════════════════════════════════ */
-@media (max-width: 768px) {
-
-  /* ── Stack sections: sticky on mobile ── */
-  .stack-section {
-    position: sticky !important;
-    top: 0 !important;
-    height: 100svh !important;
-    overflow: hidden !important;
-  }
-
-  /* ── Hero ── */
-  .hero {
-    height: auto !important;
-    min-height: 100svh !important;
-    padding: 0 !important;
-  }
-
-  /* Shrink the white inset frame on mobile so image fills more */
-  .hero-bg-image {
-    min-height: 100svh !important;
-  }
-  .hero-bg-image::after {
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    border-radius: 0 !important;
-  }
-  .hero-bg-image::before {
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    border-radius: 0 !important;
-    /* Stronger overlay on mobile for text contrast */
-    background: rgba(0, 0, 0, 0.45) !important;
-  }
-
-  .hero-content {
-    padding: 100px 24px 60px !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: unset !important;
-  }
-
-  .hero h1 {
-    font-size: 2rem !important;
-    line-height: 1.25 !important;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.85) !important;
-    margin-bottom: 1rem !important;
-  }
-
-  .hero .subtext {
-    font-size: 1.05rem !important;
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8) !important;
-    margin-bottom: 2rem !important;
-  }
-
-  /* Hero buttons: stacked vertically with proper spacing */
-  .hero-buttons {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 24px !important;
-    width: 100% !important;
-  }
-
-  /* CTA buttons: full-width with 56px touch targets */
-  .hero-buttons button,
-  .hero-buttons a,
-  .cta-button {
-    min-height: 56px !important;
-    padding: 16px 28px !important;
-    font-size: 1.05rem !important;
-    width: 85% !important;
-    max-width: 300px !important;
-    text-align: center !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  /* ── Video section: pure video on mobile ── */
-  .video-section {
-    min-height: 60vh !important;
-    background: #0a1a2e !important;
-    padding: 0 !important;
-  }
-
-  #video-wrapper {
-    padding: 0 !important;
-  }
-
-  #video-unmute-btn {
-    bottom: 16px !important;
-    right: 16px !important;
-    width: 44px !important;
-    height: 44px !important;
-  }
-
-  /* ── About ── */
-  .about {
-    padding: 60px 0 !important;
-  }
-
-  .about-content {
-    grid-template-columns: 1fr !important;
-    gap: 32px !important;
-  }
-
-  .about h2 {
-    font-size: 2rem !important;
-  }
-
-  .about p {
-    font-size: 1.05rem !important;
-  }
-
-  .about-image {
-    height: 260px !important;
-    border-radius: 12px !important;
-  }
-
-  /* ── Offerings ── */
-  .offerings {
-    padding: 60px 0 !important;
-  }
-
-  .offerings h2 {
-    font-size: 2rem !important;
-  }
-
-  .offerings-subtext {
-    font-size: 1.05rem !important;
-    margin-bottom: 2rem !important;
-  }
-
-  .offerings-grid {
-    grid-template-columns: 1fr !important;
-    gap: 24px !important;
-  }
-
-  .offering-card {
-    padding: 28px 20px !important;
-  }
-
-  .offering-card h3 {
-    font-size: 1.5rem !important;
-  }
-
-  .offering-card p {
-    font-size: 1rem !important;
-  }
-
-  /* ── Training Journey ── */
-  .training-journey {
-    padding: 60px 0 !important;
-  }
-
-  .training-journey h2 {
-    font-size: 2rem !important;
-  }
-
-  .training-hero-image {
-    height: 220px !important;
-    margin: 1.5rem auto 2rem !important;
-    border-radius: 12px !important;
-  }
-
-  .training-text {
-    font-size: 1.05rem !important;
-    margin-bottom: 2rem !important;
-  }
-
-  .training-cards {
-    grid-template-columns: 1fr !important;
-    gap: 20px !important;
-    margin-bottom: 2rem !important;
-  }
-
-  .training-card {
-    padding: 24px 20px !important;
-  }
-
-  .training-card h3 {
-    font-size: 1.2rem !important;
-  }
-
-  .training-card p {
-    font-size: 1rem !important;
-  }
-
-  /* ── Therapy Section ── */
-  .therapy-section {
-    padding: 60px 0 !important;
-  }
-
-  .therapy-content {
-    grid-template-columns: 1fr !important;
-    gap: 32px !important;
-  }
-
-  .therapy-section h2 {
-    font-size: 2rem !important;
-  }
-
-  .therapy-section p {
-    font-size: 1.05rem !important;
-  }
-
-  .therapy-image {
-    height: 220px !important;
-    border-radius: 12px !important;
-  }
-
-  .workshop-image {
-    height: 200px !important;
-    border-radius: 12px !important;
-    margin-bottom: 1.5rem !important;
-  }
-
-  /* ── Testimonials ── */
-  .testimonial-carousel {
-    padding: 50px 0 !important;
-  }
-
-  .testimonial-container {
-    padding: 0 20px !important;
-  }
-
-  .testimonial-carousel h3 {
-    font-size: 1.75rem !important;
-    margin-bottom: 2rem !important;
-  }
-
-  /* ── Closing CTA ── */
-  .closing-cta {
-    padding: 60px 0 !important;
-  }
-
-  .closing-cta h2 {
-    font-size: 2rem !important;
-  }
-
-  .closing-cta p {
-    font-size: 1.05rem !important;
-    margin-bottom: 2rem !important;
-  }
-
-  .closing-buttons {
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 14px !important;
-  }
-
-  .closing-buttons button,
-  .closing-buttons a {
-    min-height: 48px !important;
-    width: 80% !important;
-    max-width: 280px !important;
-    text-align: center !important;
-  }
-
-  /* ── Images: prevent overflow ── */
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  /* ── Container: ensure proper padding ── */
-  .container {
-    padding: 0 20px !important;
-  }
-
-  /* ── Navbar mobile toggle: ensure 48px touch target ── */
-  [aria-label*="toggle"],
-  [aria-label*="menu"],
-  button[class*="mobile"],
-  button[class*="toggle"] {
-    min-width: 48px !important;
-    min-height: 48px !important;
-  }
-
-  /* ── LiquidCN / shadcn buttons on mobile ── */
-  /* Offering cards full-width buttons */
-  .offerings-grid button,
-  .offerings-grid a[role="button"] {
-    min-height: 48px !important;
-    width: 100% !important;
-    font-size: 1rem !important;
-  }
-
-  /* All card footer buttons */
-  [class*="card-footer"] button,
-  [class*="CardFooter"] button {
-    min-height: 48px !important;
-  }
-}
-
-/* ════════════════════════════════════════════════
-   OFFERINGS GRID — Global styles (apply to React component)
-   ════════════════════════════════════════════════ */
-
-/* Desktop: 2-column grid */
-.offerings-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 40px;
-  width: 100%;
-  box-sizing: border-box;
-  overflow: visible;
-}
-
-/* Cards: proper box model, no margin bleed */
-.offering-card,
-.offerings-grid > * {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0; /* prevent grid blowout */
-  overflow: visible; /* allow aura glow to show */
-}
-
-/* Mobile: single column handled in the main @media (max-width: 768px) block above */
-
-/* ════════════════════════════════════════════════
-   AURA EFFECTS — Blue-Gold Cosmic Glow
-   ════════════════════════════════════════════════ */
-
-/* Base aura wrapper — static glow (no animation for perf) */
-.aura-effect {
-  position: relative;
-  filter:
-    drop-shadow(0 0 12px rgba(212, 175, 55, 0.4))
-    drop-shadow(0 0 25px rgba(15, 76, 117, 0.25));
-  transition: filter 0.4s ease;
-}
-
-/* Only animate on non-reduced-motion, and with a slower cycle to reduce paint */
-@media (prefers-reduced-motion: no-preference) {
-  .aura-effect {
-    animation: auraPulse 6s ease-in-out infinite; /* slowed from 3s to 6s */
-    will-change: filter;
-  }
-}
-
-/* Intensify on hover */
-.aura-effect:hover {
-  filter:
-    drop-shadow(0 0 20px rgba(212, 175, 55, 0.7))
-    drop-shadow(0 0 45px rgba(212, 175, 55, 0.4))
-    drop-shadow(0 0 60px rgba(15, 76, 117, 0.5)) !important;
-  animation: none !important;
-}
-
-@keyframes auraPulse {
-  0%, 100% {
-    filter:
-      drop-shadow(0 0 12px rgba(212, 175, 55, 0.35))
-      drop-shadow(0 0 25px rgba(15, 76, 117, 0.2));
-  }
-  50% {
-    filter:
-      drop-shadow(0 0 20px rgba(212, 175, 55, 0.6))
-      drop-shadow(0 0 40px rgba(212, 175, 55, 0.3))
-      drop-shadow(0 0 55px rgba(15, 76, 117, 0.35));
-  }
-}
-
-/* Hero image aura — softer, more ethereal via drop-shadow (no layout impact) */
-.hero-image-aura {
-  filter:
-    drop-shadow(0 0 20px rgba(212, 175, 55, 0.45))
-    drop-shadow(0 0 40px rgba(15, 76, 117, 0.35));
-  animation: heroAuraPulse 4s ease-in-out infinite;
-}
-
-@keyframes heroAuraPulse {
-  0%, 100% {
-    filter:
-      drop-shadow(0 0 20px rgba(212, 175, 55, 0.45))
-      drop-shadow(0 0 40px rgba(15, 76, 117, 0.35));
-  }
-  50% {
-    filter:
-      drop-shadow(0 0 30px rgba(212, 175, 55, 0.7))
-      drop-shadow(0 0 60px rgba(15, 76, 117, 0.5));
-  }
-}
-
-/* Static gradient background for white sections (removed animation for perf) */
-.cosmic-bg {
-  background: linear-gradient(135deg, #ffffff 0%, #fdf9f0 35%, #f0f6fc 65%, #ffffff 100%);
-}
-
-/* Button aura — compact glow ring via box-shadow (no layout impact) */
-.btn-aura {
-  box-shadow:
-    0 0 10px rgba(212, 175, 55, 0.3),
-    0 4px 15px rgba(0, 0, 0, 0.2);
+.training-stack-card {
+  position: sticky;
+  /* top = nav height (70px) + per-card offset */
+  top: calc(70px + var(--card-offset, 0px));
+  background: white;
+  border-radius: 20px;
+  padding: 32px 28px 36px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  border-top: 4px solid var(--qrhht-gold);
+  margin-bottom: 4px;
+  /* Cards behind get slightly darker shadow as next stacks on top */
   transition: box-shadow 0.3s ease;
-}
-.btn-aura:hover {
-  box-shadow:
-    0 0 20px rgba(212, 175, 55, 0.7),
-    0 0 40px rgba(212, 175, 55, 0.4),
-    0 6px 20px rgba(0, 0, 0, 0.3);
-}
-
-/* Extra small screens (≤ 480px) */
-@media (max-width: 480px) {
-  .hero h1 {
-    font-size: 1.75rem !important;
-  }
-
-  .hero .subtext {
-    font-size: 0.95rem !important;
-  }
-
-  .about h2,
-  .offerings h2,
-  .training-journey h2,
-  .therapy-section h2,
-  .closing-cta h2,
-  .testimonial-carousel h3 {
-    font-size: 1.6rem !important;
-  }
-
-  .hero-buttons button,
-  .hero-buttons a,
-  .closing-buttons button,
-  .closing-buttons a {
-    width: 90% !important;
-  }
-
-  .qrhht-testimonials-wrap {
-    padding: 0 20px 50px !important;
-  }
-}
-
-/* ══════════════════════════════════════════════════════════════
-   FIXED PLASMA BACKGROUND — single container behind all sections
-   ══════════════════════════════════════════════════════════════ */
-
-/* Fixed container: covers viewport, sits behind ALL stacked sections */
-.plasma-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: 1; /* Above body bg, below all stack-sections (z-index 10+) */
-  pointer-events: none;
-  overflow: hidden; /* Prevent plasma auras from causing horizontal overflow */
-  contain: layout style; /* Isolate layout/style from rest of page */
-  will-change: auto; /* No transform — don't create unnecessary GPU layer */
-}
-
-/* Plasma zones — viewport-percentage positions spread across the page */
-/* Zone 1–4: top area (hero, video) */
-.plasma-zone-1  { top: 5%;   left: 0%; transform: translateX(-30%); }
-.plasma-zone-2  { top: 60%;  right: 0%; transform: translateX(30%); }
-.plasma-zone-3  { top: 10%;  right: 0%; transform: translateX(30%); }
-.plasma-zone-4  { top: 70%;  left: 0%; transform: translateX(-20%); }
-/* Zone 5–8: middle area (about, offerings, training, therapy) */
-.plasma-zone-5  { top: 15%;  right: 0%; transform: translateX(30%); }
-.plasma-zone-6  { top: 80%;  left: 0%; transform: translateX(-15%); }
-.plasma-zone-7  { top: 5%;   left: 45%; }
-.plasma-zone-8  { top: 55%;  right: 10%; }
-/* Zone 9–12: lower area (testimonials, CTA) */
-.plasma-zone-9  { top: 20%;  left: 10%; }
-.plasma-zone-10 { top: 70%;  right: 0%; transform: translateX(30%); }
-.plasma-zone-11 { top: 30%;  left: 0%; transform: translateX(-30%); }
-.plasma-zone-12 { top: 85%;  right: 5%; }
-
-/* ── Solid opaque section backgrounds — no bleed-through when scrolling ── */
-.about,
-.offerings,
-.training-journey,
-.therapy-section,
-.testimonial-carousel {
-  background: #ffffff !important;
-}
-
-/* ── Testimonials: clip overflow from Swiper cards-stack effect ── */
-.testimonial-carousel {
-  overflow: hidden !important;
-}
-
-/* Stack section default: solid white — no transparency */
-.stack-section {
-  background: #ffffff;
-}
-
-/* Keep closing CTA and video section their own distinct background */
-/* Video section needs overflow:hidden to contain the absolute-positioned iframe */
-.video-section {
-  background: #0a1a2e !important;
-  overflow: hidden !important;
-  height: 100vh !important;
-  min-height: 100vh !important;
-}
-
-/* Ensure video wrapper never bleeds outside its container */
-#video-wrapper {
-  overflow: hidden !important;
-}
-
-/* YouTube iframe: contained within video-wrapper */
-#video-wrapper iframe {
-  max-width: none; /* Allow full-bleed sizing via JS */
-  overflow: hidden;
-}
-.closing-cta { background: #ffffff !important; }
-
-/* Global page background — white base */
-body {
-  background: #ffffff;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   PLASMA AURA — free-flowing organic blobs
-   ══════════════════════════════════════════════════════════════ */
-
-.plasma-aura {
-  position: absolute;
-  pointer-events: none;
-  z-index: 0;
-  filter: blur(32px);
-  will-change: opacity;
-  transform: translateZ(0); /* Force GPU compositing layer */
-  backface-visibility: hidden;
-  /* CSS-only opacity pulse — no JS, no rotate, no morph */
-}
-
-/* ── Sizes ── ENHANCED: much larger for dramatic effect */
-.plasma-aura.sz-sm { width: 280px; height: 280px; }
-.plasma-aura.sz-md { width: 420px; height: 420px; }
-.plasma-aura.sz-lg { width: 560px; height: 560px; }
-
-/* ── Colors ── ENHANCED: stronger, more saturated with inner+outer layers */
-.plasma-aura.col-gold {
-  background:
-    radial-gradient(
-      ellipse at 30% 30%,
-      rgba(255, 215, 0, 0.55) 0%,
-      rgba(212, 175, 55, 0.35) 25%,
-      rgba(212, 175, 55, 0.12) 55%,
-      transparent 75%
-    ),
-    radial-gradient(
-      ellipse at 70% 70%,
-      rgba(212, 140, 0, 0.30) 0%,
-      rgba(180, 120, 0, 0.15) 40%,
-      transparent 70%
-    );
-}
-.plasma-aura.col-navy {
-  background:
-    radial-gradient(
-      ellipse at 60% 60%,
-      rgba(10, 60, 120, 0.55) 0%,
-      rgba(15, 76, 117, 0.30) 35%,
-      rgba(10, 26, 46, 0.15) 60%,
-      transparent 80%
-    ),
-    radial-gradient(
-      ellipse at 30% 30%,
-      rgba(0, 100, 200, 0.25) 0%,
-      rgba(10, 26, 46, 0.10) 50%,
-      transparent 75%
-    );
-}
-.plasma-aura.col-teal {
-  background:
-    radial-gradient(
-      ellipse at 50% 40%,
-      rgba(0, 210, 200, 0.45) 0%,
-      rgba(32, 178, 170, 0.28) 30%,
-      rgba(10, 26, 46, 0.12) 60%,
-      transparent 80%
-    ),
-    radial-gradient(
-      ellipse at 70% 65%,
-      rgba(0, 180, 180, 0.25) 0%,
-      rgba(20, 120, 120, 0.10) 50%,
-      transparent 75%
-    );
-}
-.plasma-aura.col-aurora {
-  background:
-    radial-gradient(
-      ellipse at 45% 55%,
-      rgba(255, 215, 0, 0.40) 0%,
-      rgba(212, 175, 55, 0.22) 25%,
-      rgba(32, 178, 170, 0.18) 50%,
-      transparent 72%
-    ),
-    radial-gradient(
-      ellipse at 65% 35%,
-      rgba(0, 200, 190, 0.28) 0%,
-      rgba(212, 175, 55, 0.15) 40%,
-      transparent 70%
-    );
-}
-
-/* ── Corner placement ── further extended for large sizes */
-.plasma-tl { top: -100px;    left: -100px;  }
-.plasma-tr { top: -100px;    right: -100px; }
-.plasma-bl { bottom: -100px; left: -100px;  }
-.plasma-br { bottom: -100px; right: -100px; }
-
-/* ── Single animation: opacity pulse only — CSS-only, no JS ── */
-.plasma-aura { animation: plasmaPulse 8s ease-in-out infinite; }
-
-/* Stagger via delay */
-.plasma-aura.delay-1 { animation-delay: -2s; }
-.plasma-aura.delay-2 { animation-delay: -5s; }
-.plasma-aura.delay-3 { animation-delay: -8s; }
-.plasma-aura.delay-4 { animation-delay: -11s; }
-
-/* ── Pulse: simple opacity fade only ── */
-@keyframes plasmaPulse {
-  0%, 100% { opacity: 0.3; }
-  50%       { opacity: 0.6; }
-}
-
-/* Plasma background container: auras are in .plasma-background (fixed).
-   Direct children of stack sections need z-index to sit above the plasma layer. */
-.stack-section > *,
-.stack-section-tall > * {
-  position: relative;
+  /* Ensure stacking is correct */
   z-index: 1;
 }
 
-/* Tall sections: white background by default */
-.stack-section-tall {
-  background: #ffffff;
+.training-stack-card:nth-child(1) { z-index: 4; }
+.training-stack-card:nth-child(2) { z-index: 3; }
+.training-stack-card:nth-child(3) { z-index: 2; }
+.training-stack-card:nth-child(4) { z-index: 1; }
+
+.training-stack-card:hover {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
 }
 
-/* ── Image Aura: static glow for all section images (no animation = no paint cost) ── */
-.aura-image {
-  position: relative;
-  overflow: visible !important;
-  /* Static drop-shadow — GPU composited, zero animation overhead */
-  filter:
-    drop-shadow(0 0 25px rgba(212, 175, 55, 0.55))
-    drop-shadow(0 0 55px rgba(32, 178, 170, 0.30))
-    drop-shadow(0 0 80px rgba(15, 76, 117, 0.25));
-  transform: translateZ(0); /* Force GPU layer */
+.training-card-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--qrhht-gold);
+  margin-bottom: 0.75rem;
+  opacity: 0.8;
 }
 
-/* Only animate on non-reduced-motion */
-@media (prefers-reduced-motion: no-preference) {
-  .aura-image {
-    animation: imageAuraPulse 8s ease-in-out infinite; /* slowed from 5s */
-    will-change: filter;
-  }
-}
-
-@keyframes imageAuraPulse {
-  0%, 100% {
-    filter:
-      drop-shadow(0 0 25px rgba(212, 175, 55, 0.55))
-      drop-shadow(0 0 55px rgba(32, 178, 170, 0.30))
-      drop-shadow(0 0 80px rgba(15, 76, 117, 0.25));
-  }
-  50% {
-    filter:
-      drop-shadow(0 0 40px rgba(212, 175, 55, 0.85))
-      drop-shadow(0 0 80px rgba(32, 178, 170, 0.55))
-      drop-shadow(0 0 110px rgba(15, 76, 117, 0.45));
-  }
-}
-
-/* ── Closing CTA: ensure full center alignment ── */
-.closing-cta {
-  text-align: center;
-}
-
-.closing-cta h2,
-.closing-cta p {
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.closing-cta .closing-buttons {
+.training-card-icon-circle {
+  width: 60px;
+  height: 60px;
+  background: var(--qrhht-navy-mid);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  margin-left: auto;
-  margin-right: auto;
+  color: white;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+.training-stack-card h3 {
+  font-family: 'Playfair Display', serif;
+  color: var(--qrhht-gold);
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.training-stack-card p {
+  color: var(--qrhht-text-muted);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* ── Reduced motion: kill all transitions ── */
+@media (prefers-reduced-motion: reduce) {
+  body.js-animations .reveal-on-scroll,
+  body.js-animations .reveal-on-scroll.revealed {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .tw-cursor { animation: none; }
 }

@@ -14,16 +14,16 @@ const HeroSection = ({
   return (
     <motion.section
       style={{ scale, rotate, width: '100%', willChange: 'transform' }}
-      className='sticky top-0 h-screen w-full overflow-hidden'
+      className='sticky top-0 h-screen w-full overflow-visible'
       id='hero'
     >
-      {/* Hero background image */}
+      {/* Hero background image - always mounted */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
           zIndex: 0,
-          overflow: 'hidden',
+          overflow: 'visible',
           pointerEvents: 'none',
         }}
       >
@@ -45,7 +45,7 @@ const HeroSection = ({
         />
       </div>
 
-      {/* Hero content */}
+      {/* Hero content - always mounted */}
       <div
         style={{
           position: 'relative',
@@ -60,12 +60,12 @@ const HeroSection = ({
       >
         <div
           className='hero-content'
-          style={{ maxWidth: 800, padding: '100px 20px 0' }}
+          style={{ maxWidth: 800, padding: '100px 20px 0', width: '100%' }}
         >
           <h1
             style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: '3.5rem',
+              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
               fontWeight: 300,
               color: '#ffffff',
               marginBottom: '1.5rem',
@@ -78,11 +78,12 @@ const HeroSection = ({
           <p
             className='subtext'
             style={{
-              fontSize: '1.4rem',
+              fontSize: 'clamp(1rem, 3vw, 1.4rem)',
               color: '#f0f0f0',
               marginBottom: '3rem',
               lineHeight: 1.7,
               textShadow: '1px 1px 3px rgba(0,0,0,0.5)',
+              padding: '0 16px',
             }}
           >
             Healing and training that awaken what&apos;s extraordinary within
@@ -189,10 +190,10 @@ const VideoSection = ({
   return (
     <motion.section
       style={{ scale, rotate, width: '100%', willChange: 'transform' }}
-      className='relative h-screen w-full overflow-hidden'
+      className='relative h-screen w-full overflow-visible'
       id='video-section'
     >
-      {/* YouTube video — full-bleed background */}
+      {/* YouTube video — full-bleed background, always mounted */}
       <div
         id='video-wrapper'
         style={{
@@ -202,7 +203,7 @@ const VideoSection = ({
           width: '100%',
           height: '100%',
           zIndex: 0,
-          overflow: 'hidden',
+          overflow: 'visible',
           background: '#0a1a2e',
         }}
       >

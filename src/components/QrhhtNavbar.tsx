@@ -1,3 +1,4 @@
+// v2: animated GIF logo
 'use client'
 import {
   Navbar,
@@ -49,7 +50,7 @@ export default function QrhhtNavbar() {
       {/* Desktop */}
       <NavBody>
         <a href="#hero" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-          <img src="/images/logo.webp" alt="QRH" style={{ height: '40px', width: 'auto' }} loading="eager" fetchPriority="high" decoding="sync" />
+          <img src="/images/logo.gif" alt="QRH" className="rounded-full" style={{ height: '50px', width: 'auto', transition: 'transform 0.3s ease' }} loading="eager" fetchPriority="high" decoding="sync" onMouseOver={(e) => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.1)' }} onMouseOut={(e) => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1)' }} />
         </a>
         <NavItems
           items={navItems}
@@ -68,7 +69,7 @@ export default function QrhhtNavbar() {
       <MobileNav>
         <MobileNavHeader>
           <a href="#hero" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            <img src="/images/logo.webp" alt="QRH" style={{ height: '36px', width: 'auto' }} loading="eager" fetchPriority="high" decoding="sync" />
+            <img src="/images/logo.gif" alt="QRH" className="rounded-full" style={{ height: '46px', width: 'auto' }} loading="eager" fetchPriority="high" decoding="sync" />
           </a>
           <MobileNavToggle
             isOpen={isMobileMenuOpen}
