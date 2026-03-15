@@ -265,16 +265,19 @@ import Footer from '../components/Footer.astro';
   /*
    * Sticky viewport — pins to top of screen for the full scroll of outer.
    * overflow:hidden clips cards entering from below.
-   * padding-bottom accounts for mobile browser URL bar (safe-area-inset-bottom).
+   * Uses 100dvh (dynamic viewport height) so it shrinks when the mobile URL
+   * bar appears and expands when it hides — no padding hack needed.
+   * Falls back to 100svh (small viewport) then 100vh for older browsers.
    */
   .training-sticky-viewport {
     position: sticky;
     top: 0;
-    height: 100vh;
+    height: 100vh; /* base fallback */
+    height: 100svh; /* small viewport: locks to URL-bar-visible height */
+    height: 100dvh; /* dynamic: adjusts as URL bar shows/hides */
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    padding-bottom: max(env(safe-area-inset-bottom, 0px), 80px);
   }
 
   /* Header at top of sticky viewport — light theme */
