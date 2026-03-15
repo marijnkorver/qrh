@@ -10,13 +10,16 @@ const navLinks = [
 const year = new Date().getFullYear();
 ---
 
+<!-- Gold accent line — mirrors navbar's hero-gold-accent -->
+<div class="footer-gold-accent" aria-hidden="true"></div>
+
 <footer class="qrh-footer" aria-label="Site footer">
   <div class="footer-inner">
 
     <!-- Top row: logo + social -->
     <div class="footer-top">
       <a href="#hero" class="footer-logo" data-anchor aria-label="QRH Home">
-        <img src="/images/logo.webp" alt="QRH" height="40" width="auto" loading="lazy" decoding="async" />
+        <img src="/images/logo.gif" alt="QRH" class="footer-logo-img" loading="lazy" decoding="async" />
       </a>
 
       <!-- Instagram -->
@@ -49,12 +52,28 @@ const year = new Date().getFullYear();
 </footer>
 
 <style>
+  /* Gold accent top line — exact mirror of navbar's hero-gold-accent */
+  .footer-gold-accent {
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(212, 175, 55, 0.6) 30%,
+      rgba(212, 175, 55, 1) 50%,
+      rgba(212, 175, 55, 0.6) 70%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+
   .qrh-footer {
-    background: #1a2a3a;
-    color: white;
+    background: rgba(255, 255, 255, 0.98);
+    color: #2c3e50;
     padding: 48px 20px 24px;
     position: relative;
     z-index: 999;
+    border-top: 1px solid rgba(212, 175, 55, 0.15);
   }
 
   .footer-inner {
@@ -70,7 +89,7 @@ const year = new Date().getFullYear();
     gap: 24px;
     margin-bottom: 32px;
     padding-bottom: 32px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
   }
 
   .footer-logo {
@@ -79,9 +98,12 @@ const year = new Date().getFullYear();
     text-decoration: none;
   }
 
-  .footer-logo img {
+  .footer-logo-img {
     height: 40px;
-    width: auto;
+    width: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
   }
 
   .footer-social-link {
@@ -91,17 +113,16 @@ const year = new Date().getFullYear();
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: rgba(212, 175, 55, 0.15);
+    background: rgba(212, 175, 55, 0.10);
     border: 1px solid rgba(212, 175, 55, 0.4);
     color: #d4af37;
     text-decoration: none;
-    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    transition: background 0.3s ease, transform 0.3s ease;
   }
 
   .footer-social-link:hover {
-    background: rgba(212, 175, 55, 0.3);
+    background: rgba(212, 175, 55, 0.22);
     transform: scale(1.1);
-    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
   }
 
   .footer-nav {
@@ -114,20 +135,38 @@ const year = new Date().getFullYear();
 
   .footer-link {
     font-family: 'Lato', sans-serif;
-    color: #b0bec5;
-    text-decoration: none;
     font-size: 0.95rem;
-    transition: color 0.3s ease;
+    font-weight: 500;
+    color: #2c3e50;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.25s ease;
+  }
+
+  .footer-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #d4af37;
+    transition: width 0.3s ease;
+    border-radius: 2px;
   }
 
   .footer-link:hover {
     color: #d4af37;
   }
 
+  .footer-link:hover::after {
+    width: 100%;
+  }
+
   .footer-copy {
     font-family: 'Lato', sans-serif;
     text-align: center;
-    color: #607d8b;
+    color: #7f8c8d;
     font-size: 0.85rem;
     margin: 0;
   }

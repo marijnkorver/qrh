@@ -52,6 +52,16 @@ export function initLenis(): void {
 }
 
 // ─── 2. GSAP: Hero → Video sticky transition ──────────
+/**
+ * Replicates opentrade-landing hero → video scroll effect:
+ *   - Hero section (sticky) scales from 1→0.85 and rotates 0→-3deg
+ *   - Video section scales from 0.85→1 and rotates 3→0deg as it scrolls over
+ *   - Hero content layer fades out while scrolling
+ *   - Hero bg image gets subtle parallax
+ *
+ * The hero-container is 200vh tall. Hero section is position:sticky top:0.
+ * ScrollTrigger scrubs from container top to container end.
+ */
 export function initHeroStickyTransition(): void {
   const gsap = (window as any).gsap;
   const ScrollTrigger = (window as any).ScrollTrigger;
@@ -62,63 +72,163 @@ export function initHeroStickyTransition(): void {
   const heroContainer = document.getElementById('hero-container');
   if (!heroSection || !videoSection || !heroContainer) return;
 
-  // Hero content (text + buttons) fades/scales as user scrolls down
+  // ── Hero section: scale + rotate as video scrolls over it ──
+  // trigger = heroContainer (200vh), scrubs the full range
+  gsap.to(heroSection, {
+    scale: 0.85,
+    rotate: -3,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: heroContainer,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 0.8,
+    },
+  });
+
+  // ── Hero content: fade + slide up as user scrolls ──
   const heroContent = heroSection.querySelector('.hero-content-layer') as HTMLElement | null;
   if (heroContent) {
     gsap.to(heroContent, {
       opacity: 0,
-      scale: 0.92,
-      y: -40,
+      y: -50,
       ease: 'none',
       scrollTrigger: {
-        trigger: heroSection,
+        trigger: heroContainer,
         start: 'top top',
-        end: 'bottom 60%',
+        end: '50% bottom',
         scrub: 0.6,
       },
     });
   }
 
-  // Hero bg image: subtle scale/parallax as video scrolls over
+  // ── Hero bg: subtle parallax/scale ──
   const heroBg = heroSection.querySelector('.hero-bg-img') as HTMLElement | null;
   if (heroBg) {
     gsap.to(heroBg, {
-      scale: 1.06,
-      y: 40,
+      scale: 1.08,
+      y: 50,
       ease: 'none',
       scrollTrigger: {
-        trigger: heroSection,
+        trigger: heroContainer,
         start: 'top top',
-        end: 'bottom top',
-        scrub: 1,
+        end: 'bottom bottom',
+        scrub: 1.2,
       },
     });
   }
+
+  // ── Video section: counter-rotate as it enters ──
+  // Starts slightly rotated, straightens out as it scrolls into view
+  gsap.fromTo(videoSection,
+    { scale: 0.9, rotate: 3 },
+    {
+      scale: 1,
+      rotate: 0,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: videoSection,
+        start: 'top bottom',
+        end: 'top top',
+        scrub: 0.8,
+      },
+    }
+  );
 }
 
-// ─── 3. Training cards: sticky stack ──────────────────
+// ─── 3. Training cards: scroll-in one by one ──────────
+/**
+ * Cards enter the viewport ONE BY ONE as you scroll.
+ *
+ * Structure:
+ *  - #training-scroll-outer = tall outer (500vh) — the scroll trigger
+ *  - .training-sticky-viewport = position:sticky, height:100vh
+ *  - .training-card[data-card-index] = absolute, bottom:0, starts translateY(100%)
+ *
+ * For each card, we create a ScrollTrigger pinned to the outer container.
+ * We use the "start" expressed as pixels into the scroll container so that
+ * each card enters at a different point in the scroll range.
+ *
+ * Card timing (4 cards, each gets ~1vh of the 500vh outer to enter):
+ *   Card 0: starts as outer enters viewport
+ *   Card 1: starts after 1 viewport-height of scroll
+ *   Card 2: starts after 2 viewport-heights of scroll
+ *   Card 3: starts after 3 viewport-heights of scroll
+ *   Each card takes ~0.8vh to fully slide in (smooth scrub)
+ */
 export function initTrainingCardStack(): void {
-  const cards = Array.from(document.querySelectorAll('.training-stack-card')) as HTMLElement[];
-  if (cards.length === 0) return;
+  const gsap = (window as any).gsap;
+  const ScrollTrigger = (window as any).ScrollTrigger;
 
-  function recalc() {
-    cards.forEach((card, i) => {
-      const prev = cards[i - 1];
-      if (!prev) {
-        card.style.setProperty('--card-offset', '0px');
-        return;
-      }
-      const prevOffset = parseFloat(prev.style.getPropertyValue('--card-offset') || '0');
-      const prevTop = prev.getBoundingClientRect().top + window.scrollY;
-      // Use the card header area height (~72px) as the "peek" strip
-      const peekHeight = 80;
-      const offset = peekHeight * i;
-      card.style.setProperty('--card-offset', `${offset}px`);
+  const outer = document.getElementById('training-scroll-outer');
+  const cards = Array.from(document.querySelectorAll('.training-card[data-card-index]')) as HTMLElement[];
+
+  if (!outer || cards.length === 0) {
+    // Fallback: show all cards without animation
+    cards.forEach(card => {
+      (card as HTMLElement).style.transform = 'translateY(0)';
     });
+    return;
   }
 
-  recalc();
-  window.addEventListener('resize', recalc, { passive: true });
+  if (!gsap || !ScrollTrigger) {
+    // No GSAP — show all cards
+    cards.forEach(card => {
+      (card as HTMLElement).style.transform = 'translateY(0)';
+    });
+    return;
+  }
+
+  // Each card takes 1 viewport height worth of scroll to enter.
+  // Card i starts entering at i * 1vh into the outer scroll range.
+  // We offset by the cards-stage top so cards are visible (not behind header) when animation starts.
+  const vh = window.innerHeight;
+  
+  // Get the cards stage to determine its offset within the sticky viewport.
+  // This ensures the ScrollTrigger starts when cards are actually in view.
+  const stage = document.getElementById('training-cards-stage');
+  const stageTop = stage ? stage.getBoundingClientRect().top - outer.getBoundingClientRect().top : 0;
+  // stageTop is the pixel offset of the cards area from the outer top (includes header height).
+  // We use this as a base offset so card animations start when cards area enters viewport.
+  // However since we use position:sticky, the actual offset into scroll = stageTop already accounted.
+  // The key fix: start card 0 EARLIER (at 0px into outer scroll) so it's visible immediately.
+  // Cards stage is in the sticky viewport, so it's always visible — the issue was timing.
+  // We compress the stagger: card 0 starts at 0, card 1 at 0.8vh, card 2 at 1.6vh, card 3 at 2.4vh.
+
+  cards.forEach((card, i) => {
+    if (i === 0) {
+      // Card 0 (Mentorship) is IMMEDIATELY visible when section arrives.
+      // No animation needed — just set it to its final position.
+      gsap.set(card, { y: '0%' });
+      return;
+    }
+
+    // Cards 1-3 slide in one by one as user scrolls.
+    // Each card takes 0.8 viewport heights of scroll to enter.
+    // Cards start after card 0 is settled, staggered by 0.8vh each.
+    const cardScrollDuration = vh * 0.8;
+    // Card i (1-indexed for animation purposes since card 0 is pre-visible):
+    //   card 1 starts at 0.8vh, card 2 at 1.6vh, card 3 at 2.4vh
+    const animIndex = i; // i is 1, 2, or 3
+    const startPx = (animIndex - 1) * cardScrollDuration;
+    const endPx = startPx + cardScrollDuration;
+
+    gsap.fromTo(
+      card,
+      { y: '100%' },
+      {
+        y: '0%',
+        ease: 'none', // linear scrub — matches scroll directly
+        scrollTrigger: {
+          trigger: outer,
+          start: `top+=${startPx} top`,
+          end:   `top+=${endPx} top`,
+          scrub: true, // true = 1:1 with scroll position (same as opentrade)
+          invalidateOnRefresh: true,
+        },
+      }
+    );
+  });
 }
 
 // ─── 4. Section reveals: IntersectionObserver ─────────
@@ -261,9 +371,12 @@ export function initAllAnimations(): void {
 
     _gsapReady = true;
     initHeroStickyTransition();
+    initTrainingCardStack();
+  } else {
+    // No GSAP — show all training cards immediately (graceful fallback)
+    initTrainingCardStack();
   }
 
-  initTrainingCardStack();
   initSectionReveals();
   initTypewriters();
 }

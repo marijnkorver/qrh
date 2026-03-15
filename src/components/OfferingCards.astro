@@ -6,7 +6,7 @@ const CALENDLY_URL = 'https://calendly.com/marayan/academy-game-plan';
 <div class="offerings-grid" id="offerings-grid">
 
   <!-- Therapy Card -->
-  <div class="offering-card aura-effect" id="therapy">
+  <div class="offering-card" id="therapy">
     <div class="offering-card-inner">
       <h3 class="offering-title">Therapy Sessions</h3>
       <p class="offering-desc">
@@ -23,7 +23,7 @@ const CALENDLY_URL = 'https://calendly.com/marayan/academy-game-plan';
   </div>
 
   <!-- Training Card -->
-  <div class="offering-card aura-effect" id="training-offering">
+  <div class="offering-card" id="training-offering">
     <div class="offering-card-inner">
       <h3 class="offering-title">Practitioner Training</h3>
       <p class="offering-desc">
@@ -53,10 +53,9 @@ const CALENDLY_URL = 'https://calendly.com/marayan/academy-game-plan';
   .offering-card {
     background: white;
     border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.09);
-    border: 2px solid transparent;
+    border: 2px solid rgba(212, 175, 55, 0.2);
     text-align: center;
-    transition: border-color 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
+    transition: border-color 0.35s ease, transform 0.35s ease;
     overflow: visible;
     cursor: default;
     opacity: 1;
@@ -100,7 +99,7 @@ const CALENDLY_URL = 'https://calendly.com/marayan/academy-game-plan';
     border: none;
     border-radius: 30px;
     cursor: pointer;
-    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    transition: background 0.25s ease, transform 0.25s ease;
     min-height: 48px;
     letter-spacing: 0.3px;
   }
@@ -108,23 +107,19 @@ const CALENDLY_URL = 'https://calendly.com/marayan/academy-game-plan';
   .btn-gold {
     background: #d4af37;
     color: white;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
   }
   .btn-gold:hover {
     background: #f4c842;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.45);
   }
 
   .btn-navy {
     background: #0f4c75;
     color: white;
-    box-shadow: 0 4px 15px rgba(15, 76, 117, 0.3);
   }
   .btn-navy:hover {
     background: #1a5d8a;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(15, 76, 117, 0.45);
   }
 
   /* Responsive */
@@ -159,14 +154,12 @@ const CALENDLY_URL = 'https://calendly.com/marayan/academy-game-plan';
     cards.forEach(card => {
       const el = card as HTMLElement;
       el.addEventListener('mouseenter', () => {
-        el.style.transform = 'translateY(-10px)';
+        el.style.transform = 'translateY(-6px)';
         el.style.borderColor = '#d4af37';
-        el.style.boxShadow = '0 25px 50px rgba(212,175,55,0.2)';
       });
       el.addEventListener('mouseleave', () => {
         el.style.transform = 'none';
-        el.style.borderColor = 'transparent';
-        el.style.boxShadow = '0 15px 35px rgba(0,0,0,0.09)';
+        el.style.borderColor = 'rgba(212, 175, 55, 0.2)';
       });
     });
 

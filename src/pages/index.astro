@@ -32,48 +32,104 @@ import Footer from '../components/Footer.astro';
     </div>
   </section>
 
-  <!-- 4. Training Journey — sticky card stack -->
-  <section class="page-section training-section" id="training">
-    <div class="container">
-      <div class="training-header reveal-on-scroll">
-        <h2 data-typewriter="The Training Journey" data-typewriter-delay="200">The Training Journey</h2>
-        <p class="section-subtext">Our 6-month program combines mentorship, immersive practice, and personal growth. An invitation to fully embody the work and confidently guide others.</p>
+  <!-- 4. Training Journey — scroll-in card stack (one card per scroll step) -->
+  <!--
+    STRUCTURE:
+    - .training-scroll-outer = tall outer (400vh) that gives scroll room
+    - .training-sticky-viewport = position:sticky; height:100vh — pins to screen
+    - .training-header-sticky = header inside sticky viewport
+    - .training-cards-stage = relative container for all cards
+    - .training-card = absolute positioned, starts translateY(100%) — enters one by one
+    GSAP ScrollTrigger scrubs each card from translateY(100%) → 0
+    at evenly spaced scroll positions. z-index layering: later cards on top.
+  -->
+  <div id="training-scroll-outer" class="training-scroll-outer">
+    <div class="training-sticky-viewport">
+
+      <!-- Header stays visible while cards scroll in -->
+      <div class="training-header">
+        <p class="training-label">Training</p>
+        <h2 class="training-heading">
+          <span class="dim">The</span>
+          <span>Training Journey</span>
+        </h2>
+        <p class="training-subtext">Our 6-month program combines mentorship, immersive practice, and personal growth. An invitation to fully embody the work and confidently guide others.</p>
       </div>
 
-      <!-- Sticky card stack: each card stacks as you scroll -->
-      <div class="training-stack-outer">
+      <!-- Card stage: all cards absolutely stacked, enter from bottom -->
+      <div class="training-cards-stage" id="training-cards-stage">
 
-        <div class="training-stack-card">
-          <div class="training-card-number">01</div>
-          <div class="training-card-icon-circle" aria-hidden="true">M</div>
-          <h3>Mentorship</h3>
-          <p>Weekly one-on-one and group sessions with experienced practitioners</p>
+        <div class="training-card" data-card-index="0" style="--accent: #d4af37; z-index: 1;">
+          <div class="training-inner">
+            <div class="training-content">
+              <div class="training-meta">
+                <h3 class="training-title"><span class="training-num">01</span>Mentorship</h3>
+                <span class="training-badge">Foundation</span>
+              </div>
+              <p class="training-desc">Weekly one-on-one and group sessions with experienced practitioners. Personal guidance through the depths of your learning journey.</p>
+            </div>
+            <div class="training-milestone">
+              <div class="milestone-label">Month</div>
+              <div class="milestone-val">1–2</div>
+              <div class="milestone-tag">Core</div>
+            </div>
+          </div>
         </div>
 
-        <div class="training-stack-card">
-          <div class="training-card-number">02</div>
-          <div class="training-card-icon-circle" aria-hidden="true">P</div>
-          <h3>Practice</h3>
-          <p>Hands-on practice and guided exploration in real-world settings</p>
+        <div class="training-card" data-card-index="1" style="--accent: #20b2aa; z-index: 2;">
+          <div class="training-inner">
+            <div class="training-content">
+              <div class="training-meta">
+                <h3 class="training-title"><span class="training-num">02</span>Practice</h3>
+                <span class="training-badge">Applied</span>
+              </div>
+              <p class="training-desc">Hands-on practice and guided exploration in real-world settings. Build genuine mastery through applied technique and feedback.</p>
+            </div>
+            <div class="training-milestone">
+              <div class="milestone-label">Month</div>
+              <div class="milestone-val">3–4</div>
+              <div class="milestone-tag">Mastery</div>
+            </div>
+          </div>
         </div>
 
-        <div class="training-stack-card">
-          <div class="training-card-number">03</div>
-          <div class="training-card-icon-circle" aria-hidden="true">S</div>
-          <h3>Support</h3>
-          <p>Marketing and client-building support to launch your practice</p>
+        <div class="training-card" data-card-index="2" style="--accent: #d4af37; z-index: 3;">
+          <div class="training-inner">
+            <div class="training-content">
+              <div class="training-meta">
+                <h3 class="training-title"><span class="training-num">03</span>Support</h3>
+                <span class="training-badge">Growth</span>
+              </div>
+              <p class="training-desc">Marketing and client-building support to launch your practice. You won't walk into your new career alone — we've got you covered.</p>
+            </div>
+            <div class="training-milestone">
+              <div class="milestone-label">Month</div>
+              <div class="milestone-val">5</div>
+              <div class="milestone-tag">Launch</div>
+            </div>
+          </div>
         </div>
 
-        <div class="training-stack-card">
-          <div class="training-card-number">04</div>
-          <div class="training-card-icon-circle" aria-hidden="true">C</div>
-          <h3>Certification</h3>
-          <p>Certificate of completion acknowledging your training and expertise</p>
+        <div class="training-card" data-card-index="3" style="--accent: #20b2aa; z-index: 4;">
+          <div class="training-inner">
+            <div class="training-content">
+              <div class="training-meta">
+                <h3 class="training-title"><span class="training-num">04</span>Certification</h3>
+                <span class="training-badge">Completion</span>
+              </div>
+              <p class="training-desc">Certificate of completion acknowledging your training and expertise. A credential that opens doors and confirms your readiness to guide others.</p>
+            </div>
+            <div class="training-milestone">
+              <div class="milestone-label">Month</div>
+              <div class="milestone-val">6</div>
+              <div class="milestone-tag">Certified</div>
+            </div>
+          </div>
         </div>
 
-      </div>
-    </div>
-  </section>
+      </div><!-- /training-cards-stage -->
+    </div><!-- /training-sticky-viewport -->
+  </div><!-- /training-scroll-outer -->
 
   <!-- 5. Therapy / Personal Healing -->
   <section class="page-section therapy-section reveal-on-scroll" id="therapy-section">
@@ -184,8 +240,6 @@ import Footer from '../components/Footer.astro';
     background-size: cover;
     background-position: center;
     border-radius: 20px;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.1);
-    filter: drop-shadow(0 0 25px rgba(212,175,55,0.4));
   }
 
   /* ── Offerings ── */
@@ -196,20 +250,227 @@ import Footer from '../components/Footer.astro';
     margin-right: auto;
   }
 
-  /* ── Training section ── */
-  .training-section { padding-bottom: 0; }
-  .training-section h2 { text-align: center; min-height: 1.2em; }
-  .training-header { text-align: center; margin-bottom: 2rem; }
-  .training-header .section-subtext {
-    margin: 0 auto 2rem;
+  /* ── Training Journey: scroll-in card stack ── */
+
+  /*
+   * Outer scroll container — 500vh gives plenty of scroll room for 4 cards.
+   * Each card enters at 25% increments of this container's scroll range.
+   */
+  .training-scroll-outer {
+    position: relative;
+    height: 500vh;
+    background: #ffffff;
   }
 
-  /* Give the stack section enough height to show all 4 cards stacking */
-  .training-stack-outer {
-    max-width: 700px;
-    margin: 0 auto;
-    /* Each card is ~220px; 4 cards × 80px offset = 320px + last card full height */
-    padding-bottom: 60px;
+  /*
+   * Sticky viewport — pins to top of screen for the full scroll of outer.
+   * overflow:hidden clips cards entering from below.
+   * padding-bottom accounts for mobile browser URL bar (safe-area-inset-bottom).
+   */
+  .training-sticky-viewport {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 80px);
+  }
+
+  /* Header at top of sticky viewport — light theme */
+  .training-header {
+    flex-shrink: 0;
+    padding: 3.5rem 4rem 1.5rem;
+    background: #ffffff;
+    position: relative;
+    z-index: 10;
+  }
+
+  .training-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #d4af37;
+    margin-bottom: 1rem;
+  }
+
+  .training-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1;
+    color: #0f4c75;
+    margin-bottom: 1rem;
+    min-height: 1.2em;
+  }
+
+  .training-heading span { display: block; }
+  .training-heading .dim { color: rgba(15,76,117,0.3); }
+
+  .training-subtext {
+    font-size: 1rem;
+    line-height: 1.65;
+    color: #5a6c7d;
+    max-width: 600px;
+    margin-top: 0.75rem;
+  }
+
+  /*
+   * Cards stage — fills remaining sticky viewport height.
+   * All cards are position:absolute, stacked at bottom.
+   * They slide up into view one by one (translateY controlled by GSAP).
+   */
+  .training-cards-stage {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /*
+   * Each card: absolute, full width & height, top-anchored with offset.
+   * Starts at translateY(100%) = hidden below viewport.
+   * GSAP scrubs to translateY(0) = fully visible.
+   * Higher z-index = later card = slides on top of previous.
+   * Top offset creates deck-of-cards peek effect (earlier card tops visible).
+   */
+  .training-card {
+    position: absolute;
+    left: 3rem;
+    right: 3rem;
+    top: 0;
+    height: 100%;
+    background: #ffffff;
+    border: 1px solid rgba(212,175,55,0.25);
+    border-radius: 16px;
+    overflow: hidden;
+    transform: translateY(100%); /* initial state — hidden below */
+    will-change: transform;
+  }
+
+  /* Each card offset slightly so deck tops peek out when stacked */
+  .training-card[data-card-index="1"] { top: 12px; height: calc(100% - 12px); }
+  .training-card[data-card-index="2"] { top: 24px; height: calc(100% - 24px); }
+  .training-card[data-card-index="3"] { top: 36px; height: calc(100% - 36px); }
+
+  .training-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 2.5rem 3rem;
+    gap: 2rem;
+    position: relative;
+    z-index: 2;
+    height: 100%;
+  }
+
+  .training-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #fff;
+    background: #d4af37;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-right: 0.6rem;
+    vertical-align: middle;
+    line-height: 1.4;
+    flex-shrink: 0;
+  }
+
+  .training-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .training-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .training-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 400;
+    text-transform: uppercase;
+    color: #0f4c75;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  .training-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0.9;
+  }
+
+  .training-desc {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #5a6c7d;
+    max-width: 600px;
+    margin: 0;
+  }
+
+  .training-milestone {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .milestone-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #5a6c7d;
+    margin-bottom: 0.25rem;
+  }
+
+  .milestone-val {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .milestone-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0.7;
+    margin-top: 0.25rem;
+  }
+
+  /* training-glow removed */
+
+  @media (max-width: 1024px) {
+    .training-header { padding: 4rem 2rem 1.5rem; }
+    .training-card { left: 1.5rem; right: 1.5rem; }
+    .training-inner {
+      grid-template-columns: 1fr auto;
+      padding: 2rem;
+    }
+    .training-milestone { text-align: left; }
+  }
+
+  @media (max-width: 640px) {
+    .training-header { padding: 3.5rem 1.5rem 1.5rem; }
+    .training-heading { font-size: clamp(2rem, 8vw, 3rem); }
+    .training-inner { grid-template-columns: 1fr; padding: 1.5rem; }
+    .training-milestone { text-align: left; }
+    /* Smaller outer on mobile — still gives enough room for 4 cards */
+    .training-scroll-outer { height: 400vh; }
   }
 
   /* ── Therapy ── */
@@ -236,8 +497,6 @@ import Footer from '../components/Footer.astro';
     background-size: cover;
     background-position: center;
     border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    filter: drop-shadow(0 0 20px rgba(212,175,55,0.35));
   }
 
   .workshop-image {
@@ -248,8 +507,6 @@ import Footer from '../components/Footer.astro';
     background-position: center;
     border-radius: 15px;
     margin-bottom: 1rem;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-    filter: drop-shadow(0 0 15px rgba(212,175,55,0.3));
   }
 
   /* ── Testimonials ── */
@@ -271,15 +528,7 @@ import Footer from '../components/Footer.astro';
     min-height: 1.2em;
   }
 
-  /* ── Hover aura on images ── */
-  .about-image,
-  .therapy-image,
-  .workshop-image {
-    transition: filter 0.4s ease;
-  }
-  .about-image:hover { filter: drop-shadow(0 0 35px rgba(212,175,55,0.7)); }
-  .therapy-image:hover,
-  .workshop-image:hover { filter: drop-shadow(0 0 30px rgba(212,175,55,0.6)); }
+  /* hover aura removed — images use simple box-shadow only */
 
   /* ── Footer ── */
   footer { position: relative; z-index: 1; }
@@ -296,8 +545,6 @@ import Footer from '../components/Footer.astro';
 
     .section-subtext { font-size: 1.05rem; }
 
-    .training-stack-outer { max-width: 100%; }
-
     .therapy-content {
       grid-template-columns: 1fr;
       gap: 32px;
@@ -309,10 +556,6 @@ import Footer from '../components/Footer.astro';
     .testimonials-section h3 { font-size: 1.75rem; margin-bottom: 1.25rem; }
 
     .container { padding: 0 16px; }
-  }
-
-  @media (max-width: 480px) {
-    .training-stack-outer { padding: 0 4px 40px; }
   }
 
   /* ── Reduced motion ── */

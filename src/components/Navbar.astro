@@ -12,7 +12,7 @@ const navItems = [
   <div class="nav-inner">
     <!-- Logo -->
     <a href="#hero" class="nav-logo" aria-label="QRH Home">
-      <img src="/images/logo.webp" alt="QRH" height="40" width="auto" loading="eager" fetchpriority="high" decoding="sync" />
+      <img src="/images/logo.gif" alt="QRH" class="nav-logo-img" loading="eager" fetchpriority="high" decoding="sync" />
     </a>
 
     <!-- Desktop links -->
@@ -83,9 +83,12 @@ const navItems = [
     flex-shrink: 0;
   }
 
-  .nav-logo img {
+  .nav-logo-img {
     height: 40px;
-    width: auto;
+    width: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
   }
 
   .nav-links {
@@ -239,8 +242,9 @@ const navItems = [
     .nav-inner {
       padding: 0 16px;
     }
-    .nav-logo img {
+    .nav-logo-img {
       height: 34px;
+      width: 34px;
     }
   }
 </style>
